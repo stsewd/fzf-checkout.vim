@@ -29,7 +29,7 @@ function! fzf_checkout#list(bang, type)
   let l:git_cmd = 'git ' . l:subcommand . ' --color=always --sort=-refname:short --format=' . shellescape(l:format)
 
   " Filter to delete current branch and HEAD
-  let l:filter = 'sed -r -e "/^' . l:current_escaped . '$/d" -e "/(origin\/HEAD)|(\(HEAD)/d"'
+  let l:filter = 'sed -r -e "/' . l:current_escaped . '\s.*$/d" -e "/(origin\/HEAD)|(\(HEAD)/d"'
   call fzf#vim#grep(
     \ l:git_cmd . ' | ' . l:filter . ' | sort -u', 0,
     \ { 'sink': function('s:checkout'), 'options': ['--no-multi', '--header='.l:current] }, a:bang)
