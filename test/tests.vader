@@ -1,0 +1,5 @@
+Execute (Get ref from line works):
+  AssertEqual 'one', fzf_checkout#get_ref('one two three')
+  AssertEqual 'branch', fzf_checkout#get_ref('branch Short subject 9 hours ago -> 1234f5')
+  AssertEqual 'branch-with-hyphen', fzf_checkout#get_ref('branch-with-hyphen Short subject 9 hours ago -> 1234f5')
+  AssertEqual 'branch/with/slashes', fzf_checkout#get_ref('branch/with/slashes Short subject 9 hours ago -> 1234f5')
