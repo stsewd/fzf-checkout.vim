@@ -33,7 +33,7 @@ function! fzf_checkout#list(bang, type)
   let l:git_cmd = 'git ' . l:subcommand . ' --color=always --sort=-refname:short --format=' . shellescape(l:format)
 
   " Filter to delete current branch and HEAD from the list
-  let l:color_seq = '\x1b\[.+m'  " \x1b[1;33mbranch/name
+  let l:color_seq = '\x1b\[1;33m'  " \x1b[1;33mbranch/name
   let l:filter = 'sed -r -e "/^' . l:color_seq . l:current_escaped . '\s.*$/d" -e "/^' . l:color_seq . '(origin\/HEAD)|(\(HEAD)/d"'
 
   call fzf#vim#grep(
