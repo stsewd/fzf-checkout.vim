@@ -21,6 +21,9 @@ Plug 'stsewd/fzf-checkout.vim'
 
 Call `:GCheckout` or `GCheckoutTag` to checkout to a branch or tag.
 
+- The current branch or commit will be show at the bottom
+- The first item on the list will be the previous branch
+
 # Configuration
 
 This plugin respects your `g:fzf_command_prefix` setting.
