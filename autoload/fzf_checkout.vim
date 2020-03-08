@@ -20,10 +20,10 @@ function! fzf_checkout#list(bang, type)
   " See valid atoms in
   " https://github.com/git/git/blob/076cbdcd739aeb33c1be87b73aebae5e43d7bcc5/ref-filter.c#L474
   let l:format =
-        \'%(color:yellow bold)%(refname:short)  ' .
-        \'%(color:reset)%(color:green)%(subject) ' .
-        \'%(color:reset)%(color:green dim italic)%(committerdate:relative) ' .
-        \'%(color:reset)%(color:blue)-> %(objectname:short)'
+        \ '%(color:yellow bold)%(refname:short)  ' .
+        \ '%(color:reset)%(color:green)%(subject) ' .
+        \ '%(color:reset)%(color:green dim italic)%(committerdate:relative) ' .
+        \ '%(color:reset)%(color:blue)-> %(objectname:short)'
 
   if a:type ==# 'branch'
     let l:subcommand = 'branch --all'
@@ -34,7 +34,10 @@ function! fzf_checkout#list(bang, type)
 
   " Filter to delete current branch and HEAD from the list
   let l:color_seq = '\x1b\[1;33m'  " \x1b[1;33mbranch/name
-  let l:filter = 'sed -r -e "/^' . l:color_seq . l:current_escaped . '\s.*$/d" -e "/^' . l:color_seq . '(origin\/HEAD)|(\(HEAD)/d"'
+  let l:filter = 
+        \ 'sed -r ' .
+        \ '-e "/^' . l:color_seq . l:current_escaped . '\s.*$/d" ' .
+        \ '-e "/^' . l:color_seq . '(origin\/HEAD)|(\(HEAD)/d"'
 
   call fzf#vim#grep(
     \ l:git_cmd . ' | ' . l:filter . ' | sort -u', 0,
