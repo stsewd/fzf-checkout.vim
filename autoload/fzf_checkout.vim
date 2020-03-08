@@ -63,7 +63,8 @@ function! fzf_checkout#list(bang, type)
 
   " Put the previous ref first
   call fzf#vim#grep(
-        \ 'echo "$(' . l:git_cmd . ' --list ' . l:previous . ')"' .
-        \ '"$(' . l:git_cmd . ' | ' . l:filter . ' | sort -u)"', 0,
+        \ 'echo "$(' . l:git_cmd . ' --list ' . l:previous . ')"\\n' .
+        \ '"$(' . l:git_cmd . ' | ' . l:filter . ' | sort -u)" | ' .
+        \ ' sed "/^\s*$/d"', 0,
         \ { 'sink': function('s:checkout'), 'options': ['--no-multi', '--header='.l:current] }, a:bang)
 endfunction
