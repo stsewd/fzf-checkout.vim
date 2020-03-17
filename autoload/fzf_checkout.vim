@@ -66,5 +66,10 @@ function! fzf_checkout#list(bang, type)
         \ 'echo "$(' . l:git_cmd . ' --list ' . l:previous . ')"\\n' .
         \ '"$(' . l:git_cmd . ' | ' . l:filter . ' | sort -u)" | ' .
         \ ' sed "/^\s*$/d"', 0,
-        \ { 'sink': function('s:checkout'), 'options': ['--no-multi', '--header='.l:current] }, a:bang)
+        \ {
+        \   'sink': function('s:checkout'),
+        \   'options': ['--no-multi', '--header', l:current, '--prompt', 'Checkout> ', '--nth', '1'],
+        \ },
+        \ a:bang,
+        \)
 endfunction
