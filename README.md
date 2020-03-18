@@ -7,15 +7,14 @@ Checkout branches and tags with [fzf.vim](https://github.com/junegunn/fzf.vim).
 
 # Installation
 
-Install using [vim-plug](https://github.com/junegunn/vim-plug). Put this on your init.vim.
+Install using [vim-plug](https://github.com/junegunn/vim-plug).
+Put this in your `init.vim`.
 
 ```vim
-" You must have installed fzf.vim
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
-
 Plug 'stsewd/fzf-checkout.vim'
 ```
+
+**Note:** You need to have `fzf.vim` installed in addition to use this plugin, see <https://github.com/junegunn/fzf.vim#installation>.
 
 # Usage
 
