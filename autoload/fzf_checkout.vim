@@ -4,8 +4,15 @@ function! fzf_checkout#get_ref(line)
 endfunction
 
 
-function! s:checkout(line)
-  let l:branch = fzf_checkout#get_ref(a:line)
+function! s:checkout(lines)
+  let l:key = a:lines[0]
+  let l:branch = fzf_checkout#get_ref(a:lines[1])
+
+  if l:key ==# 'alt-enter'
+    " Remove origin to checkout the branch locally
+    let l:branch = substitute(l:branch, 'origin/', '', '')
+  endif
+
   execute 'split | terminal git checkout ' . shellescape(l:branch)
   " Auto insert, so you only need to press enter to close the terminal window.
   call feedkeys('i', 'n')
@@ -67,8 +74,8 @@ function! fzf_checkout#list(bang, type)
         \ '"$(' . l:git_cmd . ' | ' . l:filter . ' | sort -u)" | ' .
         \ ' sed "/^\s*$/d"', 0,
         \ {
-        \   'sink': function('s:checkout'),
-        \   'options': ['--no-multi', '--header', l:current, '--prompt', 'Checkout> ', '--nth', '1'],
+        \   'sink*': function('s:checkout'),
+        \   'options': ['--no-multi', '--header', l:current, '--prompt', 'Checkout> ', '--nth', '1', '--expect', 'alt-enter'],
         \ },
         \ a:bang,
         \)

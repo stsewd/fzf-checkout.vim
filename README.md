@@ -21,8 +21,11 @@ Plug 'stsewd/fzf-checkout.vim'
 
 Call `:GCheckout` or `GCheckoutTag` to checkout to a branch or tag.
 
+## Features
+
 - The current branch or commit will be show at the bottom
 - The first item on the list will be the previous branch
+- Press `alt-enter` to checkout a remote branch locally (`origin/foo` becomes `foo`)
 
 # Configuration
 
