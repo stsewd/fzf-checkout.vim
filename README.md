@@ -1,6 +1,6 @@
 # fzf-checkout.vim
 
-Checkout branches and tags with [fzf.vim](https://github.com/junegunn/fzf.vim).
+Checkout branches and tags with [fzf](https://github.com/junegunn/fzf).
 
 ![gcheckouttag](https://user-images.githubusercontent.com/4975310/76155099-68186e00-60b5-11ea-84fa-b61cfe7a3e02.png)
 ![gcheckout](https://user-images.githubusercontent.com/4975310/76155101-72d30300-60b5-11ea-8941-9171f5b8e08c.png)
@@ -14,7 +14,8 @@ Put this in your `init.vim`.
 Plug 'stsewd/fzf-checkout.vim'
 ```
 
-**Note:** You need to have `fzf.vim` installed in addition to use this plugin, see <https://github.com/junegunn/fzf.vim#installation>.
+**Note:** You need to have `fzf` installed in addition to use this plugin.
+See <https://github.com/junegunn/fzf/blob/master/README-VIM.md#installation>.
 
 # Usage
 
@@ -28,4 +29,5 @@ Call `:GCheckout` or `GCheckoutTag` to checkout to a branch or tag.
 
 # Configuration
 
-This plugin respects your `g:fzf_command_prefix` setting.
+If you have [fzf.vim](https://github.com/junegunn/fzf.vim) installed,
+this plugin will respect your `g:fzf_command_prefix` setting.
