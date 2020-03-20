@@ -68,15 +68,19 @@ function! fzf_checkout#list(bang, type)
         \ '-e "/^' . l:color_seq . l:previous_escaped . '\s.*$/d" ' .
         \ '-e "/^' . l:color_seq . '(origin\/HEAD)|(\(HEAD)/d"'
 
-  " Put the previous ref first
-  call fzf#vim#grep(
-        \ 'echo "$(' . l:git_cmd . ' --list ' . l:previous . ')"\\n' .
+  " Put the previous ref first,
+  " list everything else,
+  " remove empty lines.
+  let l:source =
+        \ 'echo -e "$(' . l:git_cmd . ' --list ' . l:previous . ')"\\n' .
         \ '"$(' . l:git_cmd . ' | ' . l:filter . ' | sort -u)" | ' .
-        \ ' sed "/^\s*$/d"', 0,
+        \ ' sed "/^\s*$/d"'
+  call fzf#run(fzf#wrap(
         \ {
+        \   'source': l:source,
         \   'sink*': function('s:checkout'),
-        \   'options': ['--no-multi', '--header', l:current, '--prompt', 'Checkout> ', '--nth', '1', '--expect', 'alt-enter'],
+        \   'options': ['--prompt', 'Checkout> ', '--header', l:current, '--ansi', '--nth', '1', '--expect', 'alt-enter'],
         \ },
         \ a:bang,
-        \)
+        \))
 endfunction
