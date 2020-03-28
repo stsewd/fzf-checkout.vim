@@ -55,8 +55,10 @@ function! fzf_checkout#list(bang, type)
 
   if a:type ==# 'branch'
     let l:subcommand = 'branch --all'
+    let l:name = 'GCheckout'
   else
     let l:subcommand = 'tag'
+    let l:name = 'GCheckoutTag'
   endif
   let l:git_cmd = 'git ' . l:subcommand . ' --color=always --sort=-refname:short --format=' . shellescape(l:format)
 
@@ -76,7 +78,7 @@ function! fzf_checkout#list(bang, type)
         \ '"$(' . l:git_cmd . ' | ' . l:filter . ' | sort -u)" | ' .
         \ ' sed "/^\s*$/d"'
   call fzf#run(fzf#wrap(
-        \ 'GCheckout',
+        \ l:name,
         \ {
         \   'source': l:source,
         \   'sink*': function('s:checkout'),
