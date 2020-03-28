@@ -76,6 +76,7 @@ function! fzf_checkout#list(bang, type)
         \ '"$(' . l:git_cmd . ' | ' . l:filter . ' | sort -u)" | ' .
         \ ' sed "/^\s*$/d"'
   call fzf#run(fzf#wrap(
+        \ 'GCheckout',
         \ {
         \   'source': l:source,
         \   'sink*': function('s:checkout'),
