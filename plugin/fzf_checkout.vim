@@ -1,3 +1,6 @@
+let g:fzf_checkout_git_bin = get(g:, 'fzf_checkout_git_bin', 'git')
+let g:fzf_checkout_git_options = get(g:, 'fzf_checkout_git_options', '')
+
 let s:prefix = get(g:, 'fzf_command_prefix', '')
 let s:branch_command = s:prefix . 'GCheckout'
 let s:tag_command = s:prefix . 'GCheckoutTag'

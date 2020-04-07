@@ -60,7 +60,11 @@ function! fzf_checkout#list(bang, type)
     let l:subcommand = 'tag'
     let l:name = 'GCheckoutTag'
   endif
-  let l:git_cmd = 'git ' . l:subcommand . ' --color=always --sort=-refname:short --format=' . shellescape(l:format)
+  let l:git_cmd = 
+        \ g:fzf_checkout_git_bin . ' ' .
+        \ l:subcommand .
+        \ ' --color=always --sort=refname:short --format=' . shellescape(l:format) . ' ' .
+        \ g:fzf_checkout_git_options
 
   " Filter to delete the current/previous ref, and HEAD from the list.
   let l:color_seq = '\x1b\[1;33m'  " \x1b[1;33mbranch/name
@@ -75,7 +79,7 @@ function! fzf_checkout#list(bang, type)
   " remove empty lines.
   let l:source =
         \ 'echo -e "$(' . l:git_cmd . ' --list ' . l:previous . ')"\\n' .
-        \ '"$(' . l:git_cmd . ' | ' . l:filter . ' | sort -u)" | ' .
+        \ '"$(' . l:git_cmd . ' | ' . l:filter . ')" | ' .
         \ ' sed "/^\s*$/d"'
   call fzf#run(fzf#wrap(
         \ l:name,
