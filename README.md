@@ -32,7 +32,7 @@ Call `:GCheckout` or `GCheckoutTag` to checkout to a branch or tag.
 If you have [fzf.vim](https://github.com/junegunn/fzf.vim) installed,
 this plugin will respect your `g:fzf_command_prefix` setting.
 
-## let g:fzf_checkout_git_bin
+## g:fzf_checkout_git_bin
 
 Name of the `git` binary.
 
