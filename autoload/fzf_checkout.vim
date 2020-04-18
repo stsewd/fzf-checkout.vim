@@ -78,7 +78,7 @@ function! fzf_checkout#list(bang, type)
   " list everything else,
   " remove empty lines.
   let l:source =
-        \ 'echo -e "$(' . l:git_cmd . ' --list ' . l:previous . ')"\\n' .
+        \ 'printf "$(' . l:git_cmd . ' --list ' . l:previous . ')"\\n' .
         \ '"$(' . l:git_cmd . ' | ' . l:filter . ')" | ' .
         \ ' sed "/^\s*$/d"'
   call fzf#run(fzf#wrap(
