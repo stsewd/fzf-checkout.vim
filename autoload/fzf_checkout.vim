@@ -9,8 +9,8 @@ function! s:checkout(lines)
   let l:branch = fzf_checkout#get_ref(a:lines[1])
 
   if l:key ==# 'alt-enter'
-    " Remove origin to checkout the branch locally
-    let l:branch = substitute(l:branch, 'origin/', '', '')
+    " Remove `origin/` to checkout the branch locally
+    let l:branch = substitute(l:branch, '^\([^/]\+\)/', '', '')
   endif
 
   execute 'split | terminal git checkout ' . shellescape(l:branch)
