@@ -5,6 +5,10 @@ endfunction
 
 
 function! s:checkout(lines)
+  if len(a:lines) < 2
+    return
+  endif
+
   let l:key = a:lines[0]
   let l:branch = fzf_checkout#get_ref(a:lines[1])
 
@@ -13,9 +17,17 @@ function! s:checkout(lines)
     let l:branch = substitute(l:branch, '^\([^/]\+\)/', '', '')
   endif
 
-  execute 'split | terminal git checkout ' . shellescape(l:branch)
-  " Auto insert, so you only need to press enter to close the terminal window.
-  call feedkeys('i', 'n')
+  let l:branch = shellescape(l:branch)
+
+  let l:execute_options = {
+        \ 'terminal': 'split | terminal {git} checkout {branch}',
+        \ 'system': 'echo system("{git} checkout {branch}")',
+        \ 'bang': '!{git} checkout {branch}',
+        \}
+  let l:execute_command = get(l:execute_options, g:fzf_checkout_execute, g:fzf_checkout_execute)
+  let l:execute_command = substitute(l:execute_command, '{git}', g:fzf_checkout_git_bin, 'g')
+  let l:execute_command = substitute(l:execute_command, '{branch}', l:branch, 'g')
+  execute l:execute_command
 endfunction
 
 
