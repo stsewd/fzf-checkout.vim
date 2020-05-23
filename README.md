@@ -50,7 +50,7 @@ let g:fzf_checkout_git_options = ''
 
 ## g:fzf_checkout_execute
 
-Command to execute the checkout, options are:
+Command used to execute the checkout, options are:
 
 - system: Uses the `system()` function (default).
 - terminal: Uses the `terminal` command (it works on Neovim only).
