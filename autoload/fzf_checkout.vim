@@ -1,6 +1,6 @@
 function! fzf_checkout#get_ref(line)
   " Get first column.
-  return substitute(a:line, '^\(.\+\)\s\@=.*', '\1', '')
+  return split(a:line)[0]
 endfunction
 
 
@@ -72,7 +72,7 @@ function! fzf_checkout#list(bang, type)
     let l:subcommand = 'tag'
     let l:name = 'GCheckoutTag'
   endif
-  let l:git_cmd = 
+  let l:git_cmd =
         \ g:fzf_checkout_git_bin . ' ' .
         \ l:subcommand .
         \ ' --color=always --sort=refname:short --format=' . shellescape(l:format) . ' ' .
