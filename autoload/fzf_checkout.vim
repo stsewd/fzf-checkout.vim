@@ -87,14 +87,14 @@ function! fzf_checkout#list(bang, type)
         \ '-e "/^' .. l:color_seq .. '(origin\/HEAD)|(HEAD)/d"'
 
   if !empty(l:previous)
-    let l:previous = system(l:git_cmd .. ' --list ' .. l:previous)
+    let l:previous = l:git_cmd .. ' --list ' .. l:previous
   endif
 
   " Put the previous ref first,
   " list everything else,
   " remove empty lines.
   let l:source =
-        \ 'printf "$(' .. l:previous .. ')"\\n' ..
+        \ 'printf "$(' .. l:previous  .. ')"\\n' ..
         \ '"$(' .. l:git_cmd .. ' | ' .. l:filter .. ')" | ' ..
         \ ' sed "/^\s*$/d"'
   call fzf#run(fzf#wrap(
