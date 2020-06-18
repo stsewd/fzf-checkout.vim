@@ -60,9 +60,9 @@ function! fzf_checkout#list(bang, type)
   " See valid atoms in
   " https://github.com/git/git/blob/076cbdcd739aeb33c1be87b73aebae5e43d7bcc5/ref-filter.c#L474
   let l:format =
-        \ '%(color:yellow bold)%(refname:short)  ' .
-        \ '%(color:reset)%(color:green)%(subject) ' .
-        \ '%(color:reset)%(color:green dim italic)%(committerdate:relative) ' .
+        \ '%(color:yellow bold)%(refname:short)  ' ..
+        \ '%(color:reset)%(color:green)%(subject) ' ..
+        \ '%(color:reset)%(color:green dim italic)%(committerdate:relative) ' ..
         \ '%(color:reset)%(color:blue)-> %(objectname:short)'
 
   if a:type ==# 'branch'
@@ -73,25 +73,29 @@ function! fzf_checkout#list(bang, type)
     let l:name = 'GCheckoutTag'
   endif
   let l:git_cmd =
-        \ g:fzf_checkout_git_bin . ' ' .
-        \ l:subcommand .
-        \ ' --color=always --sort=refname:short --format=' . shellescape(l:format) . ' ' .
+        \ g:fzf_checkout_git_bin .. ' ' ..
+        \ l:subcommand ..
+        \ ' --color=always --sort=refname:short --format=' .. shellescape(l:format) .. ' ' ..
         \ g:fzf_checkout_git_options
 
   " Filter to delete the current/previous ref, and HEAD from the list.
   let l:color_seq = '\x1b\[1;33m'  " \x1b[1;33mbranch/name
   let l:filter =
-        \ 'sed -r ' .
-        \ '-e "/^' . l:color_seq . l:current_escaped . '\s.*$/d" ' .
-        \ '-e "/^' . l:color_seq . l:previous_escaped . '\s.*$/d" ' .
-        \ '-e "/^' . l:color_seq . '(origin\/HEAD)|(\(HEAD)/d"'
+        \ 'sed -r ' ..
+        \ '-e "/^' .. l:color_seq .. l:current_escaped .. '\s.*$/d" ' ..
+        \ '-e "/^' .. l:color_seq .. l:previous_escaped .. '\s.*$/d" ' ..
+        \ '-e "/^' .. l:color_seq .. '(origin\/HEAD)|(HEAD)/d"'
+
+  if !empty(l:previous)
+    let l:previous = system(l:git_cmd .. ' --list ' .. l:previous)
+  endif
 
   " Put the previous ref first,
   " list everything else,
   " remove empty lines.
   let l:source =
-        \ 'printf "$(' . l:git_cmd . ' --list ' . l:previous . ')"\\n' .
-        \ '"$(' . l:git_cmd . ' | ' . l:filter . ')" | ' .
+        \ 'printf "$(' .. l:previous .. ')"\\n' ..
+        \ '"$(' .. l:git_cmd .. ' | ' .. l:filter .. ')" | ' ..
         \ ' sed "/^\s*$/d"'
   call fzf#run(fzf#wrap(
         \ l:name,
