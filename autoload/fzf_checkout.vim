@@ -84,8 +84,15 @@ function! fzf_checkout#list(bang, type)
 
   " Filter to delete the current/previous ref, and HEAD from the list.
   let l:color_seq = '\x1b\[1;33m'  " \x1b[1;33mbranch/name
+
+  let l:sed_flag = '-r'
+  " macOS has no -r flag, but has -E flag that does the same
+  if has("mac")
+      let l:sed_flag = '-E'
+  endif
+
   let l:filter =
-        \ 'sed -r ' ..
+        \ 'sed ' .. l:sed_flag .. ' ' ..
         \ '-e "/^' .. l:color_seq .. l:current_escaped .. '\s.*$/d" ' ..
         \ '-e "/^' .. l:color_seq .. l:previous_escaped .. '\s.*$/d" ' ..
         \ '-e "/^' .. l:color_seq .. '(origin\/HEAD)|(HEAD)/d"'
