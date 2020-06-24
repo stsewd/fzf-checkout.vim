@@ -26,6 +26,7 @@ Call `:GCheckout` or `GCheckoutTag` to checkout to a branch or tag.
 - The current branch or commit will be show at the bottom
 - The first item on the list will be the previous branch
 - Press `alt-enter` to track a remote branch locally (`origin/foo` becomes `foo`)
+- Press `ctrl-n` to create branch locally with the current query as name
 
 # Configuration
 
@@ -50,10 +51,18 @@ let g:fzf_checkout_git_options = ''
 
 ## g:fzf_checkout_track_key
 
-Key used to track the remote branch locally (`git checkout --track`).
+Key used to track the remote branch locally (`git checkout --track branch`).
 
 ```vim
 let g:fzf_checkout_track_key = 'alt-enter'
+```
+
+## g:fzf_checkout_create_key
+
+Key used to create a branch locally (`git checkout -b branch`).
+
+```vim
+let g:fzf_checkout_track_key = 'ctrl-n'
 ```
 
 ## g:fzf_checkout_execute
@@ -88,6 +97,20 @@ This is the same as:
 
 ```vim
 let g:fzf_checkout_track_execute = 'echo system("{git} checkout --track {branch}")'
+```
+
+## g:fzf_checkout_create_execute
+
+Same as `g:fzf_checkout_execute`, but it's used when creating a branch.
+
+```vim
+let g:fzf_checkout_track_execute = 'system'
+```
+
+This is the same as:
+
+```vim
+let g:fzf_checkout_track_execute = 'echo system("{git} checkout -b {branch}")'
 ```
 
 # Examples
