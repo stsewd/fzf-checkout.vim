@@ -104,13 +104,13 @@ let g:fzf_checkout_track_execute = 'echo system("{git} checkout --track {branch}
 Same as `g:fzf_checkout_execute`, but it's used when creating a branch.
 
 ```vim
-let g:fzf_checkout_track_execute = 'system'
+let g:fzf_checkout_create_execute = 'system'
 ```
 
 This is the same as:
 
 ```vim
-let g:fzf_checkout_track_execute = 'echo system("{git} checkout -b {branch}")'
+let g:fzf_checkout_create_execute = 'echo system("{git} checkout -b {branch}")'
 ```
 
 # Examples
