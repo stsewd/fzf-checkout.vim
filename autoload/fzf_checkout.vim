@@ -13,22 +13,31 @@ function! s:checkout(lines)
   let l:branch = fzf_checkout#get_ref(a:lines[1])
   let l:branch = shellescape(l:branch)
 
-  if l:key ==# 'alt-enter'
+  if l:key ==# g:fzf_checkout_track_key
     " Track remote branch
     let l:execute_options = {
           \ 'terminal': 'split | terminal {git} checkout --track {branch}',
           \ 'system': 'echo system("{git} checkout --track {branch}")',
           \ 'bang': '!{git} checkout --track {branch}',
           \}
+    let l:execute_command = get(
+          \ l:execute_options,
+          \ g:fzf_checkout_track_execute,
+          \ g:fzf_checkout_track_execute,
+          \)
   else
     let l:execute_options = {
           \ 'terminal': 'split | terminal {git} checkout {branch}',
           \ 'system': 'echo system("{git} checkout {branch}")',
           \ 'bang': '!{git} checkout {branch}',
           \}
+    let l:execute_command = get(
+          \ l:execute_options,
+          \ g:fzf_checkout_execute,
+          \ g:fzf_checkout_execute,
+          \)
   endif
 
-  let l:execute_command = get(l:execute_options, g:fzf_checkout_execute, g:fzf_checkout_execute)
   let l:execute_command = substitute(l:execute_command, '{git}', g:fzf_checkout_git_bin, 'g')
   let l:execute_command = substitute(l:execute_command, '{branch}', l:branch, 'g')
   execute l:execute_command
@@ -60,6 +69,8 @@ function! fzf_checkout#list(bang, type)
 
   let l:previous = s:get_previous_ref()
   let l:previous_escaped = escape(l:previous, '/')
+
+  let l:valid_keys = join([g:fzf_checkout_track_key], ',')
 
   " See valid atoms in
   " https://github.com/git/git/blob/076cbdcd739aeb33c1be87b73aebae5e43d7bcc5/ref-filter.c#L474
@@ -106,7 +117,7 @@ function! fzf_checkout#list(bang, type)
         \ {
         \   'source': l:source,
         \   'sink*': function('s:checkout'),
-        \   'options': ['--prompt', 'Checkout> ', '--header', l:current, '--ansi', '--nth', '1', '--expect', 'alt-enter'],
+        \   'options': ['--prompt', 'Checkout> ', '--header', l:current, '--ansi', '--nth', '1', '--expect', l:valid_keys],
         \ },
         \ a:bang,
         \))
