@@ -48,6 +48,14 @@ Additional options to pass to the `git` command.
 let g:fzf_checkout_git_options = ''
 ```
 
+## g:fzf_checkout_track_key
+
+Key used to track the remote branch locally (`git checkout --track`).
+
+```vim
+let g:fzf_checkout_track_key = 'alt-enter'
+```
+
 ## g:fzf_checkout_execute
 
 Command used to execute the checkout, options are:
@@ -66,6 +74,20 @@ it will be executed to checkout the branch or tag.
 
 ```vim
 let g:fzf_checkout_execute = 'echo system("{git} checkout {branch}")'
+```
+
+## g:fzf_checkout_track_execute
+
+Same as `g:fzf_checkout_execute`, but it's used when tracking a branch.
+
+```vim
+let g:fzf_checkout_track_execute = 'system'
+```
+
+This is the same as:
+
+```vim
+let g:fzf_checkout_track_execute = 'echo system("{git} checkout --track {branch}")'
 ```
 
 # Examples
