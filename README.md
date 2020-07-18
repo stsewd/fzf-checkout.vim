@@ -115,7 +115,7 @@ let g:fzf_checkout_create_execute = 'echo system("{git} checkout -b {branch}")'
 
 ## g:fzf_checkout_hide_remote
 
-Do not show remote branches.
+Show all local branches and non-duplicating remote branches without a prefix (e.g. without `origin`).
 
 ```vim
 let g:fzf_checkout_hide_remote = v:true

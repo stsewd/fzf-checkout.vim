@@ -104,7 +104,8 @@ function! fzf_checkout#list(bang, type)
 
   if a:type ==# 'branch'
     if g:fzf_checkout_hide_remote
-      let l:subcommand = 'branch --remote' " Show all remote branches to strip origin/ prefix later
+      " Show only remote to have all branches without duplicates and strip remote prefix later
+      let l:subcommand = 'branch --remote'
     else
       let l:subcommand = 'branch --all'
     endif
