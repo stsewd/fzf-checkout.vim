@@ -113,6 +113,14 @@ This is the same as:
 let g:fzf_checkout_create_execute = 'echo system("{git} checkout -b {branch}")'
 ```
 
+## g:fzf_checkout_hide_remote
+
+Do not show remote branches.
+
+```vim
+let g:fzf_checkout_hide_remote = v:true
+```
+
 # Examples
 
 Prefix commands with `Fzf`, i.e, `FzfGCheckout` and `FzfGCheckoutTag`.

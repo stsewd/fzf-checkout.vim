@@ -97,13 +97,17 @@ function! fzf_checkout#list(bang, type)
   " See valid atoms in
   " https://github.com/git/git/blob/076cbdcd739aeb33c1be87b73aebae5e43d7bcc5/ref-filter.c#L474
   let l:format =
-        \ '%(color:yellow bold)%(refname:short)  ' ..
+        \ '%(color:yellow bold)%(refname:' .. (g:fzf_checkout_hide_remote ? 'strip=3' : 'short') .. ')  ' ..
         \ '%(color:reset)%(color:green)%(subject) ' ..
         \ '%(color:reset)%(color:green dim italic)%(committerdate:relative) ' ..
         \ '%(color:reset)%(color:blue)-> %(objectname:short)'
 
   if a:type ==# 'branch'
-    let l:subcommand = 'branch --all'
+    if g:fzf_checkout_hide_remote
+      let l:subcommand = 'branch --remote' " Show all remote branches to strip origin/ prefix later
+    else
+      let l:subcommand = 'branch --all'
+    endif
     let l:name = 'GCheckout'
   else
     let l:subcommand = 'tag'
