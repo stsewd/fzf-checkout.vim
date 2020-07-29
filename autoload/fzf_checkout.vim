@@ -99,19 +99,20 @@ function s:remove_duplicated_branches(branches) abort
 endfunction
 
 
+" See valid atoms in
+" https://github.com/git/git/blob/076cbdcd739aeb33c1be87b73aebae5e43d7bcc5/ref-filter.c#L474
+const s:format = shellescape(
+      \ '%(color:yellow bold)%(refname:short)  ' ..
+      \ '%(color:reset)%(color:green)%(subject) ' ..
+      \ '%(color:reset)%(color:green dim italic)%(committerdate:relative) ' ..
+      \ '%(color:reset)%(color:blue)-> %(objectname:short)'
+      \)
+
+
 function! fzf_checkout#list(bang, type)
   let l:current = s:get_current_ref()
-  let l:current_escaped = escape(l:current, '/')
 
   let l:valid_keys = join([g:fzf_checkout_track_key, g:fzf_checkout_create_key], ',')
-
-  " See valid atoms in
-  " https://github.com/git/git/blob/076cbdcd739aeb33c1be87b73aebae5e43d7bcc5/ref-filter.c#L474
-  const l:format =
-        \ '%(color:yellow bold)%(refname:short)  ' ..
-        \ '%(color:reset)%(color:green)%(subject) ' ..
-        \ '%(color:reset)%(color:green dim italic)%(committerdate:relative) ' ..
-        \ '%(color:reset)%(color:blue)-> %(objectname:short)'
 
   if a:type ==# 'branch'
     let l:subcommand = 'branch --all'
@@ -120,11 +121,7 @@ function! fzf_checkout#list(bang, type)
     let l:subcommand = 'tag'
     let l:name = 'GCheckoutTag'
   endif
-  let l:git_cmd =
-        \ g:fzf_checkout_git_bin .. ' ' ..
-        \ l:subcommand ..
-        \ ' --color=always --format=' .. shellescape(l:format) .. ' ' ..
-        \ g:fzf_checkout_git_options
+  let l:git_cmd = printf('%s %s --color=always --format=%s %s', g:fzf_checkout_git_bin, l:subcommand, s:format, g:fzf_checkout_git_options)
 
   let l:git_output = split(system(l:git_cmd), '\n')
 
@@ -134,7 +131,7 @@ function! fzf_checkout#list(bang, type)
   endif
 
   " Filter to delete the current ref, and HEAD from the list.
-  let l:git_output = filter(l:git_output, 'v:val !~# "^\\S*' .. l:current_escaped .. '" && v:val !~# "^\\S*HEAD"')
+  let l:git_output = filter(l:git_output, printf('v:val !~# "^\\S*%s" && v:val !~# "^\\S*HEAD"', escape(l:current, '/')))
 
   let l:options = [
         \ '--prompt', 'Checkout> ',
