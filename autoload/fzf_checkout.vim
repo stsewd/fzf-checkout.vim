@@ -103,14 +103,12 @@ function! fzf_checkout#list(bang, type)
 
   let l:git_output = split(system(l:git_cmd), '\n')
 
-  const l:color_seq = '\\e\\[\[0-9;\]\\+m' " ^[[1;33m
   if g:fzf_checkout_hide_remote
-    let l:git_output = map(l:git_output, 'substitute(v:val, "' .. l:color_seq .. '\\zs\\S*", {m -> fnamemodify(m[0], ":t")}, "")')
+    let l:git_output = map(l:git_output, 'substitute(v:val, "\\e\\[\[0-9;\]\\+m\\zs\\S*", {m -> fnamemodify(m[0], ":t")}, "")')
   endif
 
   " Filter to delete the current ref, and HEAD from the list.
-  let l:git_output = filter(l:git_output, 'v:val !~? "^' .. l:color_seq .. l:current_escaped .. '" && ' ..
-        \ 'v:val !~? "^' .. l:color_seq .. '(origin\/HEAD)|(HEAD)"')
+  let l:git_output = filter(l:git_output, 'v:val !~? "^\\S*' .. l:current_escaped .. '" && v:val !~? "^\\S*HEAD"')
 
   let l:options = [
         \ '--prompt', 'Checkout> ',
