@@ -131,7 +131,7 @@ Prefix commands with `Fzf`, i.e, `FzfGCheckout` and `FzfGCheckoutTag`.
 let g:fzf_command_prefix = 'Fzf'
 ```
 
-Sort branches/tags by committer date.
+Sort branches/tags by name.
 
 ```vim
 let g:fzf_checkout_git_options = '--sort=refname:short'
