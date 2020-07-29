@@ -1,6 +1,6 @@
 " Global settings
 let g:fzf_checkout_git_bin = get(g:, 'fzf_checkout_git_bin', 'git')
-let g:fzf_checkout_git_options = get(g:, 'fzf_checkout_git_options', '')
+let g:fzf_checkout_git_options = get(g:, 'fzf_checkout_git_options', '--sort=-committerdate')
 let g:fzf_checkout_execute = get(g:, 'fzf_checkout_execute', 'system')
 let g:fzf_checkout_track_execute = get(g:, 'fzf_checkout_track_execute', 'system')
 let g:fzf_checkout_track_key = get(g:, 'fzf_checkout_track_key', 'alt-enter')

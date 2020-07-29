@@ -46,7 +46,7 @@ let g:fzf_checkout_git_bin = 'git'
 Additional options to pass to the `git` command.
 
 ```vim
-let g:fzf_checkout_git_options = ''
+let g:fzf_checkout_git_options = '--sort=-committerdate'
 ```
 
 ## g:fzf_checkout_track_key
@@ -132,5 +132,5 @@ let g:fzf_command_prefix = 'Fzf'
 Sort branches/tags by committer date.
 
 ```vim
-let g:fzf_checkout_git_options = '--sort=committerdate'
+let g:fzf_checkout_git_options = '--sort=refname:short'
 ```
