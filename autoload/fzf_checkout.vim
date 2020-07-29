@@ -74,6 +74,31 @@ function! s:get_current_ref()
 endfunction
 
 
+function s:remove_duplicated_branches(branches) abort
+    let l:filtered_branches = []
+
+    for formatted_item in a:branches
+      let l:formatted_item_end = stridx(formatted_item, ' ')
+      let l:found = v:false
+
+      for added_item in l:filtered_branches
+        let l:added_item_end = stridx(added_item, ' ')
+        if strcharpart(added_item, 0, added_item_end) ==? strcharpart(formatted_item, 0, formatted_item_end)
+          let l:found = v:true
+          break
+        endif
+      endfor
+
+      if l:found != v:true
+        call add(l:filtered_branches, formatted_item)
+      endif
+
+    endfor
+
+    return l:filtered_branches
+endfunction
+
+
 function! fzf_checkout#list(bang, type)
   let l:current = s:get_current_ref()
   let l:current_escaped = escape(l:current, '/')
@@ -103,12 +128,13 @@ function! fzf_checkout#list(bang, type)
 
   let l:git_output = split(system(l:git_cmd), '\n')
 
-  if g:fzf_checkout_hide_remote
-    let l:git_output = map(l:git_output, 'substitute(v:val, "\\e\\[\[0-9;\]\\+m\\zs\\S*", {m -> fnamemodify(m[0], ":t")}, "")')
+  if g:fzf_checkout_hide_remote && a:type ==# 'branch'
+    let l:formatted_output = map(l:git_output, 'substitute(v:val, "\\e\\[\[0-9;\]\\+m\\zs\\S*", {m -> fnamemodify(m[0], ":t")}, "")')
+    let l:git_output = s:remove_duplicated_branches(l:formatted_output)
   endif
 
   " Filter to delete the current ref, and HEAD from the list.
-  let l:git_output = filter(l:git_output, 'v:val !~? "^\\S*' .. l:current_escaped .. '" && v:val !~? "^\\S*HEAD"')
+  let l:git_output = filter(l:git_output, 'v:val !~# "^\\S*' .. l:current_escaped .. '" && v:val !~# "^\\S*HEAD"')
 
   let l:options = [
         \ '--prompt', 'Checkout> ',
