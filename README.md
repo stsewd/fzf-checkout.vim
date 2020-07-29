@@ -48,7 +48,7 @@ Additional options to pass to the `git` command. It is not recommended to change
 may break something.
 
 ```vim
-let g:fzf_checkout_git_options = '--sort=-committerdate'
+let g:fzf_checkout_git_options = '--sort=refname:short'
 ```
 
 ## g:fzf_checkout_track_key
@@ -120,7 +120,7 @@ let g:fzf_checkout_create_execute = 'echo system("{git} checkout -b {branch}")'
 Show all local branches and non-duplicating remote branches without a prefix (e.g. without `origin`).
 
 ```vim
-let g:fzf_checkout_hide_remote = v:true
+let g:fzf_checkout_hide_remote = v:false
 ```
 
 # Examples
@@ -131,8 +131,8 @@ Prefix commands with `Fzf`, i.e, `FzfGCheckout` and `FzfGCheckoutTag`.
 let g:fzf_command_prefix = 'Fzf'
 ```
 
-Sort branches/tags by name.
+Sort branches/tags by committer date. Minus sign to show in reverse order (recent first).
 
 ```vim
-let g:fzf_checkout_git_options = '--sort=refname:short'
+let g:fzf_checkout_git_options = '--sort=-committerdate'
 ```

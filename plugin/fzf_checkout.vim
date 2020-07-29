@@ -1,12 +1,12 @@
 " Global settings
 let g:fzf_checkout_git_bin = get(g:, 'fzf_checkout_git_bin', 'git')
-let g:fzf_checkout_git_options = get(g:, 'fzf_checkout_git_options', '--sort=-committerdate')
+let g:fzf_checkout_git_options = get(g:, 'fzf_checkout_git_options', '--sort=refname:short')
 let g:fzf_checkout_execute = get(g:, 'fzf_checkout_execute', 'system')
 let g:fzf_checkout_track_execute = get(g:, 'fzf_checkout_track_execute', 'system')
 let g:fzf_checkout_track_key = get(g:, 'fzf_checkout_track_key', 'alt-enter')
 let g:fzf_checkout_create_execute = get(g:, 'fzf_checkout_create_execute', 'system')
 let g:fzf_checkout_create_key = get(g:, 'fzf_checkout_create_key', 'ctrl-n')
-let g:fzf_checkout_hide_remote = get(g:, 'fzf_checkout_hide_remote', v:true)
+let g:fzf_checkout_hide_remote = get(g:, 'fzf_checkout_hide_remote', v:false)
 
 
 let s:prefix = get(g:, 'fzf_command_prefix', '')
