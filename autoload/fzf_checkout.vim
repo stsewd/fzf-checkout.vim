@@ -77,20 +77,19 @@ endfunction
 function s:remove_duplicated_branches(branches) abort
     let l:filtered_branches = []
 
-    for formatted_item in a:branches
-      let l:formatted_item_end = stridx(formatted_item, ' ')
+    for branch in a:branches
+      let l:branch_name = strcharpart(branch, 0, stridx(branch, ' '))
       let l:found = v:false
 
-      for added_item in l:filtered_branches
-        let l:added_item_end = stridx(added_item, ' ')
-        if strcharpart(added_item, 0, added_item_end) ==? strcharpart(formatted_item, 0, formatted_item_end)
+      for added_branch in l:filtered_branches
+        if strcharpart(added_branch, 0, stridx(added_branch, ' ')) ==# l:branch_name
           let l:found = v:true
           break
         endif
       endfor
 
       if l:found != v:true
-        call add(l:filtered_branches, formatted_item)
+        call add(l:filtered_branches, branch)
       endif
 
     endfor
