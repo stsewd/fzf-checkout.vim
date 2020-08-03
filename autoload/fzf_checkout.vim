@@ -83,6 +83,8 @@ const s:format = shellescape(
       \ '%(color:reset)%(color:blue)-> %(objectname:short)'
       \)
 
+const s:color_regex = '\\e\\[\[0-9;\]\\+m\\zs'
+
 
 function! fzf_checkout#list(bang, type)
   let l:current = s:get_current_ref()
@@ -101,7 +103,7 @@ function! fzf_checkout#list(bang, type)
   let l:git_output = split(system(l:git_cmd), '\n')
 
   " Filter to delete the current ref, and HEAD from the list.
-  let l:git_output = filter(l:git_output, printf('v:val !~# "^\\S*%s" && v:val !~# "^\\S*HEAD"', escape(l:current, '/')))
+  let l:git_output = filter(l:git_output, printf('v:val !~# "^%s%s" && v:val !~# "^%s\\(origin/\\)\\?HEAD"', s:color_regex, escape(l:current, '/'), s:color_regex))
 
   let l:options = [
         \ '--prompt', 'Checkout> ',
