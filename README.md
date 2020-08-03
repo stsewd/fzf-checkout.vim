@@ -115,14 +115,6 @@ This is the same as:
 let g:fzf_checkout_create_execute = 'echo system("{git} checkout -b {branch}")'
 ```
 
-## g:fzf_checkout_hide_remote
-
-Show all local branches and non-duplicating remote branches without a prefix (e.g. without `origin`).
-
-```vim
-let g:fzf_checkout_hide_remote = v:false
-```
-
 # Examples
 
 Prefix commands with `Fzf`, i.e, `FzfGCheckout` and `FzfGCheckoutTag`.

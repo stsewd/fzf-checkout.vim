@@ -6,7 +6,6 @@ let g:fzf_checkout_track_execute = get(g:, 'fzf_checkout_track_execute', 'system
 let g:fzf_checkout_track_key = get(g:, 'fzf_checkout_track_key', 'alt-enter')
 let g:fzf_checkout_create_execute = get(g:, 'fzf_checkout_create_execute', 'system')
 let g:fzf_checkout_create_key = get(g:, 'fzf_checkout_create_key', 'ctrl-n')
-let g:fzf_checkout_hide_remote = get(g:, 'fzf_checkout_hide_remote', v:false)
 
 
 let s:prefix = get(g:, 'fzf_command_prefix', '')

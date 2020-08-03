@@ -74,30 +74,6 @@ function! s:get_current_ref()
 endfunction
 
 
-function s:remove_duplicated_branches(branches) abort
-    let l:filtered_branches = []
-
-    for branch in a:branches
-      let l:branch_name = strcharpart(branch, 0, stridx(branch, ' '))
-      let l:found = v:false
-
-      for added_branch in l:filtered_branches
-        if strcharpart(added_branch, 0, stridx(added_branch, ' ')) ==# l:branch_name
-          let l:found = v:true
-          break
-        endif
-      endfor
-
-      if l:found != v:true
-        call add(l:filtered_branches, branch)
-      endif
-
-    endfor
-
-    return l:filtered_branches
-endfunction
-
-
 " See valid atoms in
 " https://github.com/git/git/blob/076cbdcd739aeb33c1be87b73aebae5e43d7bcc5/ref-filter.c#L474
 const s:format = shellescape(
@@ -123,11 +99,6 @@ function! fzf_checkout#list(bang, type)
   let l:git_cmd = printf('%s %s --color=always --format=%s %s', g:fzf_checkout_git_bin, l:subcommand, s:format, g:fzf_checkout_git_options)
 
   let l:git_output = split(system(l:git_cmd), '\n')
-
-  if g:fzf_checkout_hide_remote && a:type ==# 'branch'
-    let l:formatted_output = map(l:git_output, 'substitute(v:val, "\\e\\[\[0-9;\]\\+m\\zs\\S*", {m -> fnamemodify(m[0], ":t")}, "")')
-    let l:git_output = s:remove_duplicated_branches(l:formatted_output)
-  endif
 
   " Filter to delete the current ref, and HEAD from the list.
   let l:git_output = filter(l:git_output, printf('v:val !~# "^\\S*%s" && v:val !~# "^\\S*HEAD"', escape(l:current, '/')))
