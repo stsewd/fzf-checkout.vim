@@ -95,6 +95,7 @@ function! s:get_previous_ref()
   return l:previous
 endfunction
 
+
 function! s:remove_branch(branches, pattern)
   " Find first occurrence and remove it
   const l:index = match(a:branches, '^' .. s:color_regex .. a:pattern)
