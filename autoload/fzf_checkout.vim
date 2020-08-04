@@ -85,6 +85,15 @@ function! s:get_current_ref()
   return l:current
 endfunction
 
+function! s:get_previous_ref()
+  " Try to get the branch name or fallback to get the commit.
+  let l:previous = system('git rev-parse -q --abbrev-ref --symbolic-full-name "@{-1}"')
+  if l:previous =~# '^\s*$' || l:previous =~# "'@{-1}'"
+    let l:previous = system('git rev-parse --short -q "@{-1}"')
+  endif
+  let l:previous = substitute(l:previous, '\n', '', 'g')
+  return l:previous
+endfunction
 
 function! s:remove_branch(branches, pattern)
   " Find first occurrence and remove it
@@ -96,10 +105,6 @@ endfunction
 
 
 function! fzf_checkout#list(bang, type)
-  let l:current = s:get_current_ref()
-
-  let l:valid_keys = join([g:fzf_checkout_track_key, g:fzf_checkout_create_key], ',')
-
   if a:type ==# 'branch'
     let l:subcommand = 'branch --all'
     let l:name = 'GCheckout'
@@ -116,9 +121,19 @@ function! fzf_checkout#list(bang, type)
 
   let l:git_output = split(system(l:git_cmd), '\n')
 
+  " Delete the current and HEAD from the list.
+  let l:current = s:get_current_ref()
   call s:remove_branch(l:git_output, escape(l:current, '/'))
   call s:remove_branch(l:git_output, '\(origin/\)\?HEAD')
 
+  " Put previous ref first
+  let l:previous = s:get_previous_ref()
+  if !empty(l:previous)
+    call s:remove_branch(l:git_output, escape(l:previous, '/'))
+    call insert(l:git_output, system(l:git_cmd .. ' --list ' .. l:previous), 0)
+  endif
+
+  let l:valid_keys = join([g:fzf_checkout_track_key, g:fzf_checkout_create_key], ',')
   let l:options = [
         \ '--prompt', 'Checkout> ',
         \ '--header', l:current,
