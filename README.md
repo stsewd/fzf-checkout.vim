@@ -48,7 +48,7 @@ Additional options to pass to the `git` command. It is not recommended to change
 may break something.
 
 ```vim
-let g:fzf_checkout_git_options = '--sort=refname:short'
+let g:fzf_checkout_git_options = ''
 ```
 
 ## g:fzf_checkout_track_key

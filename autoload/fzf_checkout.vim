@@ -1,3 +1,15 @@
+" See valid atoms in
+" https://github.com/git/git/blob/076cbdcd739aeb33c1be87b73aebae5e43d7bcc5/ref-filter.c#L474
+const s:format = shellescape(
+      \ '%(color:yellow bold)%(refname:short)  ' ..
+      \ '%(color:reset)%(color:green)%(subject) ' ..
+      \ '%(color:reset)%(color:green dim italic)%(committerdate:relative) ' ..
+      \ '%(color:reset)%(color:blue)-> %(objectname:short)'
+      \)
+
+const s:color_regex = '\e\[[0-9;]\+m\zs'
+
+
 function! fzf_checkout#get_ref(line)
   " Get first column.
   return split(a:line)[0]
@@ -74,16 +86,13 @@ function! s:get_current_ref()
 endfunction
 
 
-" See valid atoms in
-" https://github.com/git/git/blob/076cbdcd739aeb33c1be87b73aebae5e43d7bcc5/ref-filter.c#L474
-const s:format = shellescape(
-      \ '%(color:yellow bold)%(refname:short)  ' ..
-      \ '%(color:reset)%(color:green)%(subject) ' ..
-      \ '%(color:reset)%(color:green dim italic)%(committerdate:relative) ' ..
-      \ '%(color:reset)%(color:blue)-> %(objectname:short)'
-      \)
-
-const s:color_regex = '\\e\\[\[0-9;\]\\+m\\zs'
+function! s:remove_branch(branches, pattern)
+  " Find first occurrence and remove it
+  const l:index = match(a:branches, '^' .. s:color_regex .. a:pattern)
+  if (l:index != -1)
+    call remove(a:branches, l:index)
+  endif
+endfunction
 
 
 function! fzf_checkout#list(bang, type)
@@ -98,12 +107,17 @@ function! fzf_checkout#list(bang, type)
     let l:subcommand = 'tag'
     let l:name = 'GCheckoutTag'
   endif
-  let l:git_cmd = printf('%s %s --color=always --format=%s %s', g:fzf_checkout_git_bin, l:subcommand, s:format, g:fzf_checkout_git_options)
+  let l:git_cmd = printf('%s %s --color=always --sort=refname:short --format=%s %s',
+        \ g:fzf_checkout_git_bin,
+        \ l:subcommand,
+        \ s:format,
+        \ g:fzf_checkout_git_options
+        \)
 
   let l:git_output = split(system(l:git_cmd), '\n')
 
-  " Filter to delete the current ref, and HEAD from the list.
-  let l:git_output = filter(l:git_output, printf('v:val !~# "^%s%s" && v:val !~# "^%s\\(origin/\\)\\?HEAD"', s:color_regex, escape(l:current, '/'), s:color_regex))
+  call s:remove_branch(l:git_output, escape(l:current, '/'))
+  call s:remove_branch(l:git_output, '\(origin/\)\?HEAD')
 
   let l:options = [
         \ '--prompt', 'Checkout> ',
