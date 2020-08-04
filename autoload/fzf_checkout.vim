@@ -101,7 +101,9 @@ function! s:remove_branch(branches, pattern)
   const l:index = match(a:branches, '^' .. s:color_regex .. a:pattern)
   if (l:index != -1)
     call remove(a:branches, l:index)
+    return v:true
   endif
+  return v:false
 endfunction
 
 
@@ -130,8 +132,9 @@ function! fzf_checkout#list(bang, type)
   " Put previous ref first
   let l:previous = s:get_previous_ref()
   if !empty(l:previous)
-    call s:remove_branch(l:git_output, escape(l:previous, '/'))
-    call insert(l:git_output, system(l:git_cmd .. ' --list ' .. l:previous), 0)
+    if (s:remove_branch(l:git_output, escape(l:previous, '/')))
+      call insert(l:git_output, system(l:git_cmd .. ' --list ' .. l:previous), 0)
+    endif
   endif
 
   let l:valid_keys = join([g:fzf_checkout_track_key, g:fzf_checkout_create_key], ',')
