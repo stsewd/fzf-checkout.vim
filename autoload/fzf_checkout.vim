@@ -7,7 +7,7 @@ const s:format = shellescape(
       \ '%(color:reset)%(color:blue)-> %(objectname:short)'
       \)
 
-const s:color_regex = '\e\[[0-9;]\+m\zs'
+const s:color_regex = '\e\[[0-9;]\+m'
 
 
 function! fzf_checkout#get_ref(line)
