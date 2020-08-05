@@ -85,6 +85,7 @@ function! s:get_current_ref()
   return l:current
 endfunction
 
+
 function! s:get_previous_ref()
   " Try to get the branch name or fallback to get the commit.
   let l:previous = system('git rev-parse -q --abbrev-ref --symbolic-full-name "@{-1}"')
