@@ -43,7 +43,9 @@ let g:fzf_checkout_git_bin = 'git'
 
 ## g:fzf_checkout_git_options
 
-Additional options to pass to the `git` command.
+Additional options to pass to the `git` command. It is not recommended to change the
+`--color` and `--format` parameters, as they are used by the plugin and changing them
+may break something.
 
 ```vim
 let g:fzf_checkout_git_options = ''
@@ -121,8 +123,8 @@ Prefix commands with `Fzf`, i.e, `FzfGCheckout` and `FzfGCheckoutTag`.
 let g:fzf_command_prefix = 'Fzf'
 ```
 
-Sort branches/tags by committer date.
+Sort branches/tags by committer date. Minus sign to show in reverse order (recent first).
 
 ```vim
-let g:fzf_checkout_git_options = '--sort=committerdate'
+let g:fzf_checkout_git_options = '--sort=-committerdate'
 ```
