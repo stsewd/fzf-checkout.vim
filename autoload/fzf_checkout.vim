@@ -130,11 +130,13 @@ function! fzf_checkout#list(bang, type)
   call s:remove_branch(l:git_output, escape(l:current, '/'))
   call s:remove_branch(l:git_output, '\(origin/\)\?HEAD')
 
-  " Put previous ref first
-  let l:previous = s:get_previous_ref()
-  if !empty(l:previous)
-    if (s:remove_branch(l:git_output, escape(l:previous, '/')))
-      call insert(l:git_output, system(l:git_cmd .. ' --list ' .. l:previous), 0)
+  if g:fzf_checkout_previous_ref_first
+    " Put previous ref first
+    let l:previous = s:get_previous_ref()
+    if !empty(l:previous)
+      if (s:remove_branch(l:git_output, escape(l:previous, '/')))
+        call insert(l:git_output, system(l:git_cmd .. ' --list ' .. l:previous), 0)
+      endif
     endif
   endif
 
