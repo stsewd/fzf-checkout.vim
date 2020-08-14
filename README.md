@@ -67,6 +67,14 @@ Key used to create a branch locally (`git checkout -b branch`).
 let g:fzf_checkout_track_key = 'ctrl-n'
 ```
 
+## g:fzf_checkout_previous_ref_first
+
+Display previously used branch first independent of specified sorting.
+
+```vim
+let g:fzf_checkout_previous_ref_first = v:true
+```
+
 ## g:fzf_checkout_execute
 
 Command used to execute the checkout, options are:
