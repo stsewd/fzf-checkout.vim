@@ -6,6 +6,8 @@ let g:fzf_checkout_track_execute = get(g:, 'fzf_checkout_track_execute', 'system
 let g:fzf_checkout_track_key = get(g:, 'fzf_checkout_track_key', 'alt-enter')
 let g:fzf_checkout_create_execute = get(g:, 'fzf_checkout_create_execute', 'system')
 let g:fzf_checkout_create_key = get(g:, 'fzf_checkout_create_key', 'ctrl-n')
+let g:fzf_checkout_delete_execute = get(g:, 'fzf_checkout_delete_execute', 'system')
+let g:fzf_checkout_delete_key = get(g:, 'fzf_checkout_delete_key', 'ctrl-d')
 let g:fzf_checkout_previous_ref_first = get(g:, 'fzf_checkout_previous_ref_first', v:true)
 
 
