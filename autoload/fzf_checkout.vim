@@ -58,6 +58,18 @@ function! s:checkout(lines)
           \ g:fzf_checkout_create_execute,
           \ g:fzf_checkout_create_execute,
           \)
+  elseif l:key ==# 'ctrl-d'
+    " Delete branch
+    let l:execute_options = {
+          \ 'terminal': 'split | terminal {git} branch -D {branch}',
+          \ 'system': 'echo system("{git} branch -D {branch}")',
+          \ 'bang': '!{git} branch -D {branch}',
+          \}
+    " TODO: read this from g:fzf_checkout_delete_execute
+    let l:execute_command = get(
+          \ l:execute_options,
+          \ 'system',
+          \)
   else
     " Normal checkout
     let l:execute_options = {
@@ -140,7 +152,8 @@ function! fzf_checkout#list(bang, type)
     endif
   endif
 
-  let l:valid_keys = join([g:fzf_checkout_track_key, g:fzf_checkout_create_key], ',')
+  " TODO: set ctrl-d as an option!
+  let l:valid_keys = join([g:fzf_checkout_track_key, g:fzf_checkout_create_key, 'ctrl-d'], ',')
   let l:options = [
         \ '--prompt', 'Checkout> ',
         \ '--header', l:current,
