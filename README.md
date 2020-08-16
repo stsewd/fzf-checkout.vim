@@ -26,7 +26,8 @@ Call `:GCheckout` or `GCheckoutTag` to checkout to a branch or tag.
 - The current branch or commit will be show at the bottom
 - The first item on the list will be the previous branch
 - Press `alt-enter` to track a remote branch locally (`origin/foo` becomes `foo`)
-- Press `ctrl-n` to create branch locally with the current query as name
+- Press `ctrl-n` to create a branch with the current query as name
+- Press `ctrl-d` to delete a branch
 
 # Configuration
 
@@ -61,10 +62,18 @@ let g:fzf_checkout_track_key = 'alt-enter'
 
 ## g:fzf_checkout_create_key
 
-Key used to create a branch locally (`git checkout -b branch`).
+Key used to create a branch (`git checkout -b branch`).
 
 ```vim
-let g:fzf_checkout_track_key = 'ctrl-n'
+let g:fzf_checkout_create_key = 'ctrl-n'
+```
+
+## g:fzf_checkout_delete_key
+
+Key used to delete a branch (`git branch -D branch`).
+
+```vim
+let g:fzf_checkout_delete_key = 'ctrl-d'
 ```
 
 ## g:fzf_checkout_previous_ref_first
@@ -111,7 +120,7 @@ let g:fzf_checkout_track_execute = 'echo system("{git} checkout --track {branch}
 
 ## g:fzf_checkout_create_execute
 
-Same as `g:fzf_checkout_execute`, but it's used when creating a branch.
+Same as `g:fzf_checkout_execute`, but used to create a branch.
 
 ```vim
 let g:fzf_checkout_create_execute = 'system'
@@ -121,6 +130,20 @@ This is the same as:
 
 ```vim
 let g:fzf_checkout_create_execute = 'echo system("{git} checkout -b {branch}")'
+```
+
+## g:fzf_checkout_delete_execute
+
+Same as `g:fzf_checkout_execute`, but used to delete a branch.
+
+```vim
+let g:fzf_checkout_delete_execute = 'system'
+```
+
+This is the same as:
+
+```vim
+let g:fzf_checkout_delete_execute = 'echo system("{git} branch -D {branch}")'
 ```
 
 # Examples
