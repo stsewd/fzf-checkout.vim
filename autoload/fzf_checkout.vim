@@ -154,10 +154,10 @@ function! fzf_checkout#list(bang, type)
   endif
 
   let l:valid_keys = join([
-  	\ g:fzf_checkout_track_key, 
-	\ g:fzf_checkout_create_key, 
-	\ g:fzf_checkout_delete_key
-  	\ ], ',')
+        \ g:fzf_checkout_track_key,
+        \ g:fzf_checkout_create_key,
+        \ g:fzf_checkout_delete_key
+        \], ',')
 
   let l:options = [
         \ '--prompt', 'Checkout> ',
