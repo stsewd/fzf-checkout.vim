@@ -27,7 +27,7 @@ Call `:GCheckout` or `GCheckoutTag` to checkout to a branch or tag.
 - The first item on the list will be the previous branch
 - Press `alt-enter` to track a remote branch locally (`origin/foo` becomes `foo`)
 - Press `ctrl-n` to create a branch or tag with the current query as name
-- Press `ctrl-d` to delete a branch or tag.
+- Press `ctrl-d` to delete a branch or tag
 
 # Configuration
 
