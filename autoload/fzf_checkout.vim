@@ -17,7 +17,6 @@ endfunction
 
 
 function! s:checkout(type, lines)
-  echomsg a:type
   if len(a:lines) < 2
     return
   endif
@@ -90,9 +89,9 @@ function! s:checkout(type, lines)
     elseif a:type ==# 'tag'
       " Delete tag
       let l:execute_options = {
-            \ 'terminal': 'split | terminal {git} tag -D {branch}',
-            \ 'system': 'echo system("{git} tag -D {branch}")',
-            \ 'bang': '!{git} tag -D {branch}',
+            \ 'terminal': 'split | terminal {git} tag -d {branch}',
+            \ 'system': 'echo system("{git} tag -d {branch}")',
+            \ 'bang': '!{git} tag -d {branch}',
             \}
       let l:execute_command = get(
             \ l:execute_options,
