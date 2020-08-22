@@ -16,7 +16,7 @@ function! fzf_checkout#get_ref(line)
 endfunction
 
 
-function! s:checkout(lines)
+function! s:checkout(type, lines)
   if len(a:lines) < 2
     return
   endif
@@ -47,30 +47,57 @@ function! s:checkout(lines)
           \ g:fzf_checkout_track_execute,
           \)
   elseif l:key ==# g:fzf_checkout_create_key
-    " Create branch
-    let l:execute_options = {
-          \ 'terminal': 'split | terminal {git} checkout -b {branch}',
-          \ 'system': 'echo system("{git} checkout -b {branch}")',
-          \ 'bang': '!{git} checkout -b {branch}',
-          \}
-    let l:execute_command = get(
-          \ l:execute_options,
-          \ g:fzf_checkout_create_execute,
-          \ g:fzf_checkout_create_execute,
-          \)
+    if a:type ==# 'branch'
+      " Create branch
+      let l:execute_options = {
+            \ 'terminal': 'split | terminal {git} checkout -b {branch}',
+            \ 'system': 'echo system("{git} checkout -b {branch}")',
+            \ 'bang': '!{git} checkout -b {branch}',
+            \}
+      let l:execute_command = get(
+            \ l:execute_options,
+            \ g:fzf_checkout_create_execute,
+            \ g:fzf_checkout_create_execute,
+            \)
+    elseif a:type ==# 'tag'
+      " Create tag
+      let l:execute_options = {
+            \ 'terminal': 'split | terminal {git} tag {branch}',
+            \ 'system': 'echo system("{git} tag {branch}")',
+            \ 'bang': '!{git} tag {branch}',
+            \}
+      let l:execute_command = get(
+            \ l:execute_options,
+            \ g:fzf_checkout_create_tag_execute,
+            \ g:fzf_checkout_create_tag_execute,
+            \)
+    endif
   elseif l:key ==# g:fzf_checkout_delete_key
-    " Delete branch
-    let l:execute_options = {
-          \ 'terminal': 'split | terminal {git} branch -D {branch}',
-          \ 'system': 'echo system("{git} branch -D {branch}")',
-          \ 'bang': '!{git} branch -D {branch}',
-          \}
-    " TODO: read this from g:fzf_checkout_delete_execute
-    let l:execute_command = get(
-          \ l:execute_options,
-          \ g:fzf_checkout_delete_execute,
-          \ g:fzf_checkout_delete_execute,
-          \)
+    if a:type ==# 'branch'
+      " Delete branch
+      let l:execute_options = {
+            \ 'terminal': 'split | terminal {git} branch -D {branch}',
+            \ 'system': 'echo system("{git} branch -D {branch}")',
+            \ 'bang': '!{git} branch -D {branch}',
+            \}
+      let l:execute_command = get(
+            \ l:execute_options,
+            \ g:fzf_checkout_delete_execute,
+            \ g:fzf_checkout_delete_execute,
+            \)
+    elseif a:type ==# 'tag'
+      " Delete tag
+      let l:execute_options = {
+            \ 'terminal': 'split | terminal {git} tag -d {branch}',
+            \ 'system': 'echo system("{git} tag -d {branch}")',
+            \ 'bang': '!{git} tag -d {branch}',
+            \}
+      let l:execute_command = get(
+            \ l:execute_options,
+            \ g:fzf_checkout_delete_tag_execute,
+            \ g:fzf_checkout_delete_tag_execute,
+            \)
+    endif
   else
     " Normal checkout
     let l:execute_options = {
@@ -171,7 +198,7 @@ function! fzf_checkout#list(bang, type)
         \ l:name,
         \ {
         \   'source': l:git_output,
-        \   'sink*': function('s:checkout'),
+        \   'sink*': function('s:checkout', [a:type]),
         \   'options': l:options,
         \ },
         \ a:bang,
