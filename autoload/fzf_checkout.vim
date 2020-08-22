@@ -17,6 +17,7 @@ endfunction
 
 
 function! s:checkout(type, lines)
+  echomsg a:type
   if len(a:lines) < 2
     return
   endif
@@ -199,7 +200,7 @@ function! fzf_checkout#list(bang, type)
         \ l:name,
         \ {
         \   'source': l:git_output,
-        \   'sink*': function(['s:checkout'], a:type),
+        \   'sink*': function('s:checkout', [a:type]),
         \   'options': l:options,
         \ },
         \ a:bang,
