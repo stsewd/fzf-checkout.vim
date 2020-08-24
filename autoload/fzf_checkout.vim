@@ -1,16 +1,16 @@
 " See valid atoms in
 " https://github.com/git/git/blob/076cbdcd739aeb33c1be87b73aebae5e43d7bcc5/ref-filter.c#L474
-const s:format = shellescape(
-      \ '%(color:yellow bold)%(refname:short)  ' ..
-      \ '%(color:reset)%(color:green)%(subject) ' ..
-      \ '%(color:reset)%(color:green dim italic)%(committerdate:relative) ' ..
+let s:format = shellescape(
+      \ '%(color:yellow bold)%(refname:short)  ' .
+      \ '%(color:reset)%(color:green)%(subject) ' .
+      \ '%(color:reset)%(color:green dim italic)%(committerdate:relative) ' .
       \ '%(color:reset)%(color:blue)-> %(objectname:short)'
       \)
 
-const s:color_regex = '\e\[[0-9;]\+m'
+let s:color_regex = '\e\[[0-9;]\+m'
 
 
-function! fzf_checkout#get_ref(line)
+function! fzf_checkout#get_ref(line) abort
   " Get first column.
   return split(a:line)[0]
 endfunction
@@ -139,7 +139,7 @@ endfunction
 
 function! s:remove_branch(branches, pattern)
   " Find first occurrence and remove it
-  const l:index = match(a:branches, '^' .. s:color_regex .. a:pattern)
+  let l:index = match(a:branches, '^' . s:color_regex . a:pattern)
   if (l:index != -1)
     call remove(a:branches, l:index)
     return v:true
@@ -148,7 +148,7 @@ function! s:remove_branch(branches, pattern)
 endfunction
 
 
-function! fzf_checkout#list(bang, type)
+function! fzf_checkout#list(bang, type) abort
   if a:type ==# 'branch'
     let l:subcommand = 'branch --all'
     let l:name = 'GCheckout'
@@ -175,7 +175,7 @@ function! fzf_checkout#list(bang, type)
     let l:previous = s:get_previous_ref()
     if !empty(l:previous)
       if (s:remove_branch(l:git_output, escape(l:previous, '/')))
-        call insert(l:git_output, system(l:git_cmd .. ' --list ' .. l:previous), 0)
+        call insert(l:git_output, system(l:git_cmd . ' --list ' . l:previous), 0)
       endif
     endif
   endif
