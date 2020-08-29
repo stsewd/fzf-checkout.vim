@@ -260,3 +260,13 @@ function! fzf_checkout#list(bang, type, options) abort
         \ a:bang,
         \))
 endfunction
+
+
+function! fzf_checkout#complete_tags(arglead, cmdline, cursorpos) abort
+  return keys(s:tag_actions)
+endfunction
+
+
+function! fzf_checkout#complete_branches(arglead, cmdline, cursorpos) abort
+  return keys(s:branch_actions)
+endfunction
