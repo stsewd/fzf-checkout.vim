@@ -2,6 +2,7 @@
 let g:fzf_checkout_git_bin = get(g:, 'fzf_checkout_git_bin', 'git')
 let g:fzf_checkout_git_options = get(g:, 'fzf_checkout_git_options', '')
 let g:fzf_checkout_previous_ref_first = get(g:, 'fzf_checkout_previous_ref_first', v:true)
+let g:fzf_branch_merge_settings = get(g:, 'fzf_branch_merge_settings', v:true)
 
 let s:branch_actions = {
       \ 'checkout': {
@@ -65,8 +66,30 @@ let s:tag_actions = {
       \ },
       \}
 
-let g:fzf_branch_actions = get(g:, 'fzf_branch_actions', s:branch_actions)
-let g:fzf_tag_actions = get(g:, 'fzf_tag_actions', s:tag_actions)
+if g:fzf_branch_merge_settings
+  for [s:action, s:value] in items(get(g:, 'fzf_branch_actions', {}))
+    if has_key(s:branch_actions, s:action)
+      call extend(s:branch_actions[s:action], s:value)
+    else
+      let s:branch_actions[s:action] = s:value
+    endif
+  endfor
+
+  for [s:action, s:value] in items(get(g:, 'fzf_tag_actions', {}))
+    if has_key(s:tag_actions, s:action)
+      call extend(s:tag_actions[s:action], s:value)
+    else
+      let s:tag_actions[s:action] = s:value
+    endif
+  endfor
+
+  let g:fzf_branch_actions = s:branch_actions
+  let g:fzf_tag_actions = s:tag_actions
+else
+  let g:fzf_branch_actions = get(g:, 'fzf_branch_actions', s:branch_actions)
+  let g:fzf_tag_actions = get(g:, 'fzf_tag_actions', s:tag_actions)
+endif
+
 
 let s:deprecated_options = [
       \ 'fzf_checkout_execute',
@@ -95,6 +118,8 @@ endfor
 
 let s:prefix = get(g:, 'fzf_command_prefix', '')
 
+" These commands are going to be removed soon!
+" Use GBranches and GTags.
 let s:branch_command = s:prefix . 'GCheckout'
 let s:tag_command = s:prefix . 'GCheckoutTag'
 execute 'command! -bang -nargs=0 ' . s:branch_command . ' call fzf_checkout#list(<bang>0, "branch", "", v:true)'
