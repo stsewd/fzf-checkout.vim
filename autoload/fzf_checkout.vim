@@ -72,12 +72,6 @@ let s:actions = {'tag': s:tag_actions, 'branch': s:branch_actions}
 let s:keybindings = {'tag': s:tag_keybindings, 'branch': s:branch_keybindings}
 
 
-function! fzf_checkout#get_ref(line) abort
-  " Get first column.
-  return split(a:line)[0]
-endfunction
-
-
 function! s:execute(type, action, lines)
   if len(a:lines) < 2
     return
@@ -89,14 +83,14 @@ function! s:execute(type, action, lines)
   let l:branch = l:input
   if len(a:lines) > 2
     " TODO: support multiple branches
-    let l:branch = fzf_checkout#get_ref(a:lines[2])
+    let l:branch = split(a:lines[2])[0]
   endif
 
   let l:branch = shellescape(l:branch)
   let l:input = shellescape(l:input)
 
   let l:action = a:action
-  if l:action ==# 'checkout'
+  if empty(l:action)
     let l:action = get(s:keybindings[a:type], l:key)
     if string(l:action) ==# '0'
       return
@@ -157,16 +151,25 @@ function! fzf_checkout#list(bang, type, options) abort
     return
   endif
 
-  let l:actions = get(s:actions, a:type)
-  let l:keybindings = keys(get(s:keybindings, a:type))
-
-  let l:action = 'checkout'
+  let l:action = ''
+  let l:actions = s:actions[a:type]
   let l:options = split(a:options)
   if !empty(l:options) && has_key(l:actions, l:options[0])
     let l:action = l:options[0]
   endif
 
-  let l:prompt = get(l:actions[l:action], 'prompt', 'Checkout')
+  " Allow all keybindings if isn't a specific task.
+  if empty(l:action)
+    let l:keybindings = keys(get(s:keybindings, a:type))
+  else
+    let l:keybindings = ['enter']
+  endif
+
+  if empty(l:action)
+    let l:prompt = 'Checkout> '
+  else
+    let l:prompt = l:actions[l:action]['prompt']
+  endif
 
   let l:git_cmd = printf('%s %s --color=always --sort=refname:short --format=%s %s',
         \ g:fzf_checkout_git_bin,
