@@ -2,7 +2,7 @@
 let g:fzf_checkout_git_bin = get(g:, 'fzf_checkout_git_bin', 'git')
 let g:fzf_checkout_git_options = get(g:, 'fzf_checkout_git_options', '')
 let g:fzf_checkout_previous_ref_first = get(g:, 'fzf_checkout_previous_ref_first', v:true)
-let g:fzf_branch_merge_settings = get(g:, 'fzf_branch_merge_settings', v:true)
+let g:fzf_checkout_merge_settings = get(g:, 'fzf_checkout_merge_settings', v:true)
 
 let s:branch_actions = {
       \ 'checkout': {
@@ -66,7 +66,7 @@ let s:tag_actions = {
       \ },
       \}
 
-if g:fzf_branch_merge_settings
+if g:fzf_checkout_merge_settings
   for [s:action, s:value] in items(get(g:, 'fzf_branch_actions', {}))
     if has_key(s:branch_actions, s:action)
       call extend(s:branch_actions[s:action], s:value)

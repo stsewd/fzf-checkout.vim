@@ -154,13 +154,13 @@ let g:fzf_tag_actions = {
       \}
 ```
 
-## g:fzf_branch_merge_settings
+## g:fzf_checkout_merge_settings
 
 Set it to `v:true` if you want to override some options from `g:fzf_branch_actions` or `g:fzf_tag_actions`.
 Set it to `v:false` if you want to have full control over the defined actions.
 
 ```vim
-let g:fzf_branch_merge_settings= v:true
+let g:fzf_checkout_merge_settings= v:true
 ```
 
 # Examples
@@ -196,7 +196,7 @@ let g:fzf_tag_actions = {
 Define checkout as the only action for branches:
 
 ```vim
-let g:fzf_branch_merge_settings = v:false
+let g:fzf_checkout_merge_settings = v:false
 let g:fzf_branch_actions = {
       \ 'checkout': {
       \   'prompt': 'Checkout> ',
