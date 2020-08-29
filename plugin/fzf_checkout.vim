@@ -68,27 +68,39 @@ let s:tag_actions = {
 let g:fzf_branch_actions = get(g:, 'fzf_branch_actions', s:branch_actions)
 let g:fzf_tag_actions = get(g:, 'fzf_tag_actions', s:tag_actions)
 
-" TODO: show a warning for old settings
-let g:fzf_checkout_execute = get(g:, 'fzf_checkout_execute', 'system')
-let g:fzf_checkout_track_execute = get(g:, 'fzf_checkout_track_execute', 'system')
-let g:fzf_checkout_track_key = get(g:, 'fzf_checkout_track_key', 'alt-enter')
-let g:fzf_checkout_create_execute = get(g:, 'fzf_checkout_create_execute', 'system')
-let g:fzf_checkout_create_tag_execute = get(g:, 'fzf_checkout_create_tag_execute', 'system')
-let g:fzf_checkout_create_key = get(g:, 'fzf_checkout_create_key', 'ctrl-n')
-let g:fzf_checkout_delete_execute = get(g:, 'fzf_checkout_delete_execute', 'system')
-let g:fzf_checkout_delete_tag_execute = get(g:, 'fzf_checkout_delete_tag_execute', 'system')
-let g:fzf_checkout_delete_key = get(g:, 'fzf_checkout_delete_key', 'ctrl-d')
+let s:deprecated_options = [
+      \ 'fzf_checkout_execute',
+      \ 'fzf_checkout_track_execute',
+      \ 'fzf_checkout_track_key',
+      \ 'fzf_checkout_create_execute',
+      \ 'fzf_checkout_create_tag_execute',
+      \ 'fzf_checkout_create_key',
+      \ 'fzf_checkout_delete_execute',
+      \ 'fzf_checkout_delete_tag_execute',
+      \ 'fzf_checkout_delete_key',
+      \]
+
+for s:option in s:deprecated_options
+  if has_key(g:, s:option)
+    echohl WarningMsg
+    echomsg printf(
+          \ 'The g:%s option was removed, ' .
+          \ 'please use g:fzf_branch_actions and g:fzf_tag_actions instead.',
+          \ s:option,
+          \)
+    echohl None
+  endif
+endfor
 
 
 let s:prefix = get(g:, 'fzf_command_prefix', '')
 
-" TODO: show a warning for old commands
-let s:branch_checkout_command = s:prefix . 'GCheckout'
-let s:tag_checkout_command = s:prefix . 'GCheckoutTag'
-execute 'command! -bang -nargs=0 ' . s:branch_checkout_command . ' call fzf_checkout#list(<bang>0, "branch", "")'
-execute 'command! -bang -nargs=0 ' . s:tag_checkout_command . ' call fzf_checkout#list(<bang>0, "tag", "")'
+let s:branch_command = s:prefix . 'GCheckout'
+let s:tag_command = s:prefix . 'GCheckoutTag'
+execute 'command! -bang -nargs=0 ' . s:branch_command . ' call fzf_checkout#list(<bang>0, "branch", "", v:true)'
+execute 'command! -bang -nargs=0 ' . s:tag_command . ' call fzf_checkout#list(<bang>0, "tag", "", v:true)'
 
 let s:branch_command = s:prefix . 'GBranches'
 let s:tag_command = s:prefix . 'GTags'
-execute 'command! -bang -nargs=? -complete=customlist,fzf_checkout#complete_branches ' . s:branch_command . ' call fzf_checkout#list(<bang>0, "branch", <q-args>)'
-execute 'command! -bang -nargs=? -complete=customlist,fzf_checkout#complete_tags ' . s:tag_command . ' call fzf_checkout#list(<bang>0, "tag", <q-args>)'
+execute 'command! -bang -nargs=? -complete=customlist,fzf_checkout#complete_branches ' . s:branch_command . ' call fzf_checkout#list(<bang>0, "branch", <q-args>, v:false)'
+execute 'command! -bang -nargs=? -complete=customlist,fzf_checkout#complete_tags ' . s:tag_command . ' call fzf_checkout#list(<bang>0, "tag", <q-args>, v:false)'
