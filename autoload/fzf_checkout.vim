@@ -6,119 +6,93 @@ let s:format = shellescape(
       \ '%(color:reset)%(color:green dim italic)%(committerdate:relative) ' .
       \ '%(color:reset)%(color:blue)-> %(objectname:short)'
       \)
-
 let s:color_regex = '\e\[[0-9;]\+m'
 
 
-function! fzf_checkout#get_ref(line) abort
-  " Get first column.
-  return split(a:line)[0]
-endfunction
+let s:branch_keybindings = {}
+for [s:action, s:value] in items(g:fzf_branch_actions)
+  let s:keymap = s:value['keymap']
+  if !empty(s:keymap)
+    let s:branch_keybindings[s:keymap] = s:action
+  endif
+endfor
+
+let s:tag_keybindings = {}
+for [s:action, s:value] in items(g:fzf_tag_actions)
+  let s:tag_keybindings[s:value['keymap']] = s:action
+endfor
+
+let s:actions = {'tag': g:fzf_tag_actions, 'branch': g:fzf_branch_actions}
+let s:keybindings = {'tag': s:tag_keybindings, 'branch': s:branch_keybindings}
 
 
-function! s:checkout(type, lines)
+function! s:execute(type, action, lines) abort
   if len(a:lines) < 2
     return
   endif
 
-  let l:query = a:lines[0]
+  let l:input = shellescape(a:lines[0])
   let l:key = a:lines[1]
+  let l:actions = s:actions[a:type]
+  let l:action = a:action
 
-  if l:key ==# g:fzf_checkout_create_key
-    let l:branch = l:query
-  elseif len(a:lines) > 2
-    let l:branch = fzf_checkout#get_ref(a:lines[2])
-  else
+  if empty(l:action)
+    let l:action = get(s:keybindings[a:type], l:key)
+    if string(l:action) ==# '0'
+      return
+    endif
+  elseif l:key !=# 'enter'
     return
   endif
 
-  let l:branch = shellescape(l:branch)
-
-  if l:key ==# g:fzf_checkout_track_key
-    " Track remote branch
-    let l:execute_options = {
-          \ 'terminal': 'split | terminal {git} checkout --track {branch}',
-          \ 'system': 'echo system("{git} checkout --track {branch}")',
-          \ 'bang': '!{git} checkout --track {branch}',
-          \}
-    let l:execute_command = get(
-          \ l:execute_options,
-          \ g:fzf_checkout_track_execute,
-          \ g:fzf_checkout_track_execute,
-          \)
-  elseif l:key ==# g:fzf_checkout_create_key
-    if a:type ==# 'branch'
-      " Create branch
-      let l:execute_options = {
-            \ 'terminal': 'split | terminal {git} checkout -b {branch}',
-            \ 'system': 'echo system("{git} checkout -b {branch}")',
-            \ 'bang': '!{git} checkout -b {branch}',
-            \}
-      let l:execute_command = get(
-            \ l:execute_options,
-            \ g:fzf_checkout_create_execute,
-            \ g:fzf_checkout_create_execute,
-            \)
-    elseif a:type ==# 'tag'
-      " Create tag
-      let l:execute_options = {
-            \ 'terminal': 'split | terminal {git} tag {branch}',
-            \ 'system': 'echo system("{git} tag {branch}")',
-            \ 'bang': '!{git} tag {branch}',
-            \}
-      let l:execute_command = get(
-            \ l:execute_options,
-            \ g:fzf_checkout_create_tag_execute,
-            \ g:fzf_checkout_create_tag_execute,
-            \)
+  let l:branch = ''
+  if len(a:lines) > 2
+    if l:actions[l:action]['multiple']
+      let l:branch = join(map(a:lines[2:], 'shellescape(split(v:val)[0])'), ' ')
+    else
+      let l:branch = shellescape(split(a:lines[2])[0])
     endif
-  elseif l:key ==# g:fzf_checkout_delete_key
-    if a:type ==# 'branch'
-      " Delete branch
-      let l:execute_options = {
-            \ 'terminal': 'split | terminal {git} branch -D {branch}',
-            \ 'system': 'echo system("{git} branch -D {branch}")',
-            \ 'bang': '!{git} branch -D {branch}',
-            \}
-      let l:execute_command = get(
-            \ l:execute_options,
-            \ g:fzf_checkout_delete_execute,
-            \ g:fzf_checkout_delete_execute,
-            \)
-    elseif a:type ==# 'tag'
-      " Delete tag
-      let l:execute_options = {
-            \ 'terminal': 'split | terminal {git} tag -d {branch}',
-            \ 'system': 'echo system("{git} tag -d {branch}")',
-            \ 'bang': '!{git} tag -d {branch}',
-            \}
-      let l:execute_command = get(
-            \ l:execute_options,
-            \ g:fzf_checkout_delete_tag_execute,
-            \ g:fzf_checkout_delete_tag_execute,
-            \)
-    endif
-  else
-    " Normal checkout
-    let l:execute_options = {
-          \ 'terminal': 'split | terminal {git} checkout {branch}',
-          \ 'system': 'echo system("{git} checkout {branch}")',
-          \ 'bang': '!{git} checkout {branch}',
-          \}
-    let l:execute_command = get(
-          \ l:execute_options,
-          \ g:fzf_checkout_execute,
-          \ g:fzf_checkout_execute,
-          \)
   endif
 
+  let l:required = l:actions[l:action]['required']
+
+  let l:branch_required = index(l:required, 'branch') >= 0 || index(l:required, 'tag') >= 0
+  if l:branch_required && empty(trim(l:branch))
+    call s:warning('A ' . a:type . ' is required')
+    return
+  endif
+
+  let l:input_required = index(l:required, 'input') >= 0
+  if l:input_required && empty(trim(l:input))
+    call s:warning('An input is required')
+    return
+  endif
+
+  if l:actions[l:action]['confirm']
+    let l:choice = confirm(
+          \'Do yo want to ' . l:action . ' ' . l:branch . '?',
+          \ "&Yes\n&No", 2
+          \)
+    if l:choice != 1
+      return
+    endif
+  endif
+
+  let l:execute_command = l:actions[l:action]['execute']
   let l:execute_command = substitute(l:execute_command, '{git}', g:fzf_checkout_git_bin, 'g')
   let l:execute_command = substitute(l:execute_command, '{branch}', l:branch, 'g')
+  let l:execute_command = substitute(l:execute_command, '{tag}', l:branch, 'g')
+  let l:execute_command = substitute(l:execute_command, '{input}', l:input, 'g')
   execute l:execute_command
 endfunction
 
 
-function! s:get_current_ref()
+function! s:warning(msg) abort
+    echohl WarningMsg | echomsg a:msg | echohl None
+endfunction
+
+
+function! s:get_current_ref() abort
   " Try to get the branch name or fallback to get the commit.
   let l:current = system('git symbolic-ref --short -q HEAD || git rev-parse --short HEAD')
   let l:current = substitute(l:current, '\n', '', 'g')
@@ -126,7 +100,7 @@ function! s:get_current_ref()
 endfunction
 
 
-function! s:get_previous_ref()
+function! s:get_previous_ref() abort
   " Try to get the branch name or fallback to get the commit.
   let l:previous = system('git rev-parse -q --abbrev-ref --symbolic-full-name "@{-1}"')
   if l:previous =~# '^\s*$' || l:previous =~# "'@{-1}'"
@@ -137,7 +111,7 @@ function! s:get_previous_ref()
 endfunction
 
 
-function! s:remove_branch(branches, pattern)
+function! s:remove_branch(branches, pattern) abort
   " Find first occurrence and remove it
   let l:index = match(a:branches, '^' . s:color_regex . a:pattern)
   if (l:index != -1)
@@ -148,14 +122,45 @@ function! s:remove_branch(branches, pattern)
 endfunction
 
 
-function! fzf_checkout#list(bang, type) abort
+function! fzf_checkout#list(bang, type, options, deprecated) abort
   if a:type ==# 'branch'
+    let l:name = 'GBranches'
+    let l:prompt = 'Branches> '
     let l:subcommand = 'branch --all'
-    let l:name = 'GCheckout'
-  else
+
+    if a:deprecated
+      call s:warning('The :GCheckout command is deprecated, use :GBranches instead')
+    endif
+  elseif a:type ==# 'tag'
+    let l:name = 'GTags'
+    let l:prompt = 'Tags> '
     let l:subcommand = 'tag'
-    let l:name = 'GCheckoutTag'
+
+    if a:deprecated
+      call s:warning('The :GCheckoutTag command is deprecated, use :GTags instead')
+    endif
+  else
+    return
   endif
+
+  let l:action = ''
+  let l:actions = s:actions[a:type]
+  let l:options = split(a:options)
+  if !empty(l:options) && has_key(l:actions, l:options[0])
+    let l:action = l:options[0]
+  endif
+
+  " Allow all keybindings if isn't a specific task.
+  if empty(l:action)
+    let l:keybindings = keys(get(s:keybindings, a:type))
+  else
+    let l:keybindings = ['enter']
+  endif
+
+  if !empty(l:action)
+    let l:prompt = l:actions[l:action]['prompt']
+  endif
+
   let l:git_cmd = printf('%s %s --color=always --sort=refname:short --format=%s %s',
         \ g:fzf_checkout_git_bin,
         \ l:subcommand,
@@ -180,16 +185,12 @@ function! fzf_checkout#list(bang, type) abort
     endif
   endif
 
-  let l:valid_keys = join([
-        \ g:fzf_checkout_track_key,
-        \ g:fzf_checkout_create_key,
-        \ g:fzf_checkout_delete_key
-        \], ',')
-
-  let l:options = [
-        \ '--prompt', 'Checkout> ',
+  let l:valid_keys = join(l:keybindings, ',')
+  let l:fzf_options = [
+        \ '--prompt', l:prompt,
         \ '--header', l:current,
         \ '--nth', '1',
+        \ '--multi',
         \ '--expect', l:valid_keys,
         \ '--ansi',
         \ '--print-query',
@@ -198,9 +199,19 @@ function! fzf_checkout#list(bang, type) abort
         \ l:name,
         \ {
         \   'source': l:git_output,
-        \   'sink*': function('s:checkout', [a:type]),
-        \   'options': l:options,
+        \   'sink*': function('s:execute', [a:type, l:action]),
+        \   'options': l:fzf_options,
         \ },
         \ a:bang,
         \))
+endfunction
+
+
+function! fzf_checkout#complete_tags(arglead, cmdline, cursorpos) abort
+  return keys(g:fzf_tag_actions)
+endfunction
+
+
+function! fzf_checkout#complete_branches(arglead, cmdline, cursorpos) abort
+  return keys(g:fzf_branch_actions)
 endfunction
