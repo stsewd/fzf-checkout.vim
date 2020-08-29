@@ -24,6 +24,11 @@ endfor
 
 let s:actions = {'tag': g:fzf_tag_actions, 'branch': g:fzf_branch_actions}
 let s:keybindings = {'tag': s:tag_keybindings, 'branch': s:branch_keybindings}
+let s:branch_filters = {
+      \ '--all': '--all',
+      \ '--locals': '',
+      \ '--remotes': '--remotes',
+      \}
 
 
 function! s:execute(type, action, lines) abort
@@ -123,10 +128,36 @@ endfunction
 
 
 function! fzf_checkout#list(bang, type, options, deprecated) abort
+  let l:actions = s:actions[a:type]
+  let l:options = split(a:options)
+  let l:action = ''
+  let l:filter = '--all'
+
+  if len(l:options) > 2
+    call s:warning('Maximun two arguments allowed')
+    return
+  endif
+
+  if !empty(l:options)
+    if has_key(l:actions, l:options[0])
+      let l:action = l:options[0]
+    elseif a:type ==# 'branch' && has_key(s:branch_filters, l:options[0])
+      let l:filter = l:options[0]
+    endif
+  endif
+
+  if len(l:options) > 1
+    if has_key(l:actions, l:options[1])
+      let l:action = l:options[1]
+    elseif a:type ==# 'branch' && has_key(s:branch_filters, l:options[1])
+      let l:filter = l:options[1]
+    endif
+  endif
+
   if a:type ==# 'branch'
     let l:name = 'GBranches'
     let l:prompt = 'Branches> '
-    let l:subcommand = 'branch --all'
+    let l:subcommand = 'branch ' . s:branch_filters[l:filter]
 
     if a:deprecated
       call s:warning('The :GCheckout command is deprecated, use :GBranches instead')
@@ -141,13 +172,6 @@ function! fzf_checkout#list(bang, type, options, deprecated) abort
     endif
   else
     return
-  endif
-
-  let l:action = ''
-  let l:actions = s:actions[a:type]
-  let l:options = split(a:options)
-  if !empty(l:options) && has_key(l:actions, l:options[0])
-    let l:action = l:options[0]
   endif
 
   " Allow all keybindings if isn't a specific task.
@@ -213,5 +237,5 @@ endfunction
 
 
 function! fzf_checkout#complete_branches(arglead, cmdline, cursorpos) abort
-  return keys(g:fzf_branch_actions)
+  return keys(g:fzf_branch_actions) + keys(s:branch_filters)
 endfunction
