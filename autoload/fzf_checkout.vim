@@ -122,15 +122,23 @@ function! s:remove_branch(branches, pattern) abort
 endfunction
 
 
-function! fzf_checkout#list(bang, type, options) abort
+function! fzf_checkout#list(bang, type, options, deprecated) abort
   if a:type ==# 'branch'
     let l:name = 'GBranches'
     let l:prompt = 'Branches> '
     let l:subcommand = 'branch --all'
+
+    if a:deprecated
+      call s:warning('The :GCheckout command is deprecated, use :GBranches instead')
+    endif
   elseif a:type ==# 'tag'
     let l:name = 'GTags'
     let l:prompt = 'Tags> '
     let l:subcommand = 'tag'
+
+    if a:deprecated
+      call s:warning('The :GCheckoutTag command is deprecated, use :GTags instead')
+    endif
   else
     return
   endif
