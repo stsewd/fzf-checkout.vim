@@ -187,7 +187,7 @@ function! fzf_checkout#list(bang, type, options) abort
     endif
   endif
 
-  " TODO: Allow keybindings only the action support them.
+  " TODO: Allow keybindings only if the action supports them.
   let l:valid_keys = join(l:keybindings, ',')
 
   let l:fzf_options = [
