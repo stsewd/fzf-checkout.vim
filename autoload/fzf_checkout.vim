@@ -15,29 +15,26 @@ let s:branch_actions = {
       \   'prompt': 'Checkout> ',
       \   'execute': 'echo system("{git} checkout {branch}")',
       \   'multiple': v:false,
+      \   'keymap': 'enter',
       \ },
       \ 'track': {
       \   'prompt': 'Track> ',
       \   'execute': 'echo system("{git} checkout --track {branch}")',
       \   'multiple': v:false,
+      \   'keymap': 'alt-enter',
       \ },
       \ 'create': {
       \   'prompt': 'Create> ',
       \   'execute': 'echo system("{git} checkout -b {input}")',
       \   'multiple': v:false,
+      \   'keymap': 'ctrl-n',
       \ },
       \ 'delete': {
       \   'prompt': 'Delete> ',
       \   'execute': 'echo system("{git} branch -D {branch}")',
       \   'multiple': v:true,
+      \   'keymap': 'ctrl-d',
       \ },
-      \}
-
-let s:branch_keybindings = {
-      \ 'enter': 'checkout',
-      \ 'ctrl-n': 'create',
-      \ 'ctrl-d': 'delete',
-      \ 'alt-enter': 'track',
       \}
 
 let s:tag_actions = {
@@ -45,27 +42,35 @@ let s:tag_actions = {
       \   'prompt': 'Checkout> ',
       \   'execute': 'echo system("{git} checkout {tag}")',
       \   'multiple': v:false,
+      \   'keymap': 'enter',
       \ },
       \ 'create': {
       \   'prompt': 'Create> ',
       \   'execute': 'echo system("{git} tag {input}")',
       \   'multiple': v:false,
+      \   'keymap': 'ctrl-n',
       \ },
       \ 'delete': {
       \   'prompt': 'Delete> ',
       \   'execute': 'echo system("{git} branch -D {tag}")',
       \   'multiple': v:true,
+      \   'keymap': 'ctrl-d',
       \ },
       \}
 
-let s:tag_keybindings = {
-      \ 'enter': 'checkout',
-      \ 'ctrl-n': 'create',
-      \ 'ctrl-d': 'delete',
-      \}
+let s:branch_keybindings = {}
+for s:action in keys(s:branch_actions)
+  let s:branch_keybindings[s:branch_actions[s:action]['keymap']] = s:action
+endfor
+
+let s:tag_keybindings = {}
+for s:action in keys(s:tag_actions)
+  let s:tag_keybindings[s:tag_actions[s:action]['keymap']] = s:action
+endfor
 
 let s:actions = {'tag': s:tag_actions, 'branch': s:branch_actions}
 let s:keybindings = {'tag': s:tag_keybindings, 'branch': s:branch_keybindings}
+
 
 function! fzf_checkout#get_ref(line) abort
   " Get first column.
