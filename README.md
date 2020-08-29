@@ -30,6 +30,7 @@ If no action is given, you can make use of defined keymaps to execute an action.
 - Press `alt-enter` to track a remote branch locally (`origin/foo` becomes `foo`)
 - Press `ctrl-n` to create a branch or tag with the current query as name
 - Press `ctrl-d` to delete a branch or tag
+- Define your own actions
 
 # Configuration
 
@@ -119,7 +120,7 @@ let g:fzf_branch_actions = {
 
 ## g:fzf_tag_actions
 
-Same as `g:fzf_branch_actions` but used to define tag actions.
+Same as `g:fzf_branch_actions`, but used to define tag actions.
 
 ```vim
 let g:fzf_tag_actions = {
@@ -150,24 +151,57 @@ let g:fzf_tag_actions = {
       \}
 ```
 
+## g:fzf_branch_merge_settings
+
+Set it to `v:true` if you want to override some options from `g:fzf_branch_actions` or `g:fzf_tag_actions`.
+Set it to `v:false` if you want to have full control over the defined actions.
+
+```vim
+let g:fzf_branch_merge_settings= v:true
+```
+
 # Examples
 
-Prefix commands with `Fzf`, i.e, `FzfGCheckout` and `FzfGCheckoutTag`.
+Prefix commands with `Fzf`, i.e, `FzfGBranches` and `FzfGTags`:
 
 ```vim
 let g:fzf_command_prefix = 'Fzf'
 ```
 
-Sort branches/tags by committer date. Minus sign to show in reverse order (recent first).
+Sort branches/tags by committer date. Minus sign to show in reverse order (recent first):
 
 ```vim
 let g:fzf_checkout_git_options = '--sort=-committerdate'
 ```
 
-# TODO
+Override the mapping to delete a branch with `ctrl-r`:
 
-- docs
-- rename plugin?
-- rename files?
-- Allow to easily override or add new settings by merging the settings from the
-  user with the default settings
+```vim
+let g:fzf_branch_actions = {
+      \ 'delete': {'keymap': 'ctrl-r'},
+      \}
+```
+
+Use the bang command to checkout a tag:
+
+```vim
+let g:fzf_tag_actions = {
+      \ 'checkout': {'execute': '!{git} checkout {branch}'},
+      \}
+```
+
+Define checkout as the only action for branches:
+
+```vim
+let g:fzf_branch_merge_settings = v:false
+let g:fzf_branch_actions = {
+      \ 'checkout': {
+      \   'prompt': 'Checkout> ',
+      \   'execute': 'echo system("{git} checkout {branch}")',
+      \   'multiple': v:false,
+      \   'keymap': 'enter',
+      \   'required': ['branch'],
+      \   'confirm': v:false,
+      \ },
+      \}
+```

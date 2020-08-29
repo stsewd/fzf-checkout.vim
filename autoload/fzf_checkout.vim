@@ -10,16 +10,16 @@ let s:color_regex = '\e\[[0-9;]\+m'
 
 
 let s:branch_keybindings = {}
-for s:action in keys(g:fzf_branch_actions)
-  let s:keymap = g:fzf_branch_actions[s:action]['keymap']
+for [s:action, s:value] in items(g:fzf_branch_actions)
+  let s:keymap = s:value['keymap']
   if !empty(s:keymap)
     let s:branch_keybindings[s:keymap] = s:action
   endif
 endfor
 
 let s:tag_keybindings = {}
-for s:action in keys(g:fzf_tag_actions)
-  let s:tag_keybindings[g:fzf_tag_actions[s:action]['keymap']] = s:action
+for [s:action, s:value] in items(g:fzf_tag_actions)
+  let s:tag_keybindings[s:value['keymap']] = s:action
 endfor
 
 let s:actions = {'tag': g:fzf_tag_actions, 'branch': g:fzf_branch_actions}
