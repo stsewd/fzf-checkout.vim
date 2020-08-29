@@ -19,7 +19,10 @@ endfor
 
 let s:tag_keybindings = {}
 for [s:action, s:value] in items(g:fzf_tag_actions)
-  let s:tag_keybindings[s:value['keymap']] = s:action
+  let s:keymap = s:value['keymap']
+  if !empty(s:keymap)
+    let s:tag_keybindings[s:keymap] = s:action
+  endif
 endfor
 
 let s:actions = {'tag': g:fzf_tag_actions, 'branch': g:fzf_branch_actions}
@@ -134,7 +137,7 @@ function! fzf_checkout#list(bang, type, options, deprecated) abort
   let l:filter = '--all'
 
   if len(l:options) > 2
-    call s:warning('Maximun two arguments allowed')
+    call s:warning('Maximum two arguments are allowed')
     return
   endif
 
