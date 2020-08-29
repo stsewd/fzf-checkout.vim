@@ -6,86 +6,23 @@ let s:format = shellescape(
       \ '%(color:reset)%(color:green dim italic)%(committerdate:relative) ' .
       \ '%(color:reset)%(color:blue)-> %(objectname:short)'
       \)
-
 let s:color_regex = '\e\[[0-9;]\+m'
 
-" TODO: this should be a setting!
-let s:branch_actions = {
-      \ 'checkout': {
-      \   'prompt': 'Checkout> ',
-      \   'execute': 'echo system("{git} checkout {branch}")',
-      \   'multiple': v:false,
-      \   'keymap': 'enter',
-      \   'required': ['branch'],
-      \   'confirm': v:false,
-      \ },
-      \ 'track': {
-      \   'prompt': 'Track> ',
-      \   'execute': 'echo system("{git} checkout --track {branch}")',
-      \   'multiple': v:false,
-      \   'keymap': 'alt-enter',
-      \   'required': ['branch'],
-      \   'confirm': v:false,
-      \ },
-      \ 'create': {
-      \   'prompt': 'Create> ',
-      \   'execute': 'echo system("{git} checkout -b {input}")',
-      \   'multiple': v:false,
-      \   'keymap': 'ctrl-n',
-      \   'required': ['input'],
-      \   'confirm': v:false,
-      \ },
-      \ 'delete': {
-      \   'prompt': 'Delete> ',
-      \   'execute': 'echo system("{git} branch -D {branch}")',
-      \   'multiple': v:true,
-      \   'keymap': 'ctrl-d',
-      \   'required': ['branch'],
-      \   'confirm': v:true,
-      \ },
-      \}
-
-let s:tag_actions = {
-      \ 'checkout': {
-      \   'prompt': 'Checkout> ',
-      \   'execute': 'echo system("{git} checkout {tag}")',
-      \   'multiple': v:false,
-      \   'keymap': 'enter',
-      \   'required': ['tag'],
-      \   'confirm': v:false,
-      \ },
-      \ 'create': {
-      \   'prompt': 'Create> ',
-      \   'execute': 'echo system("{git} tag {input}")',
-      \   'multiple': v:false,
-      \   'keymap': 'ctrl-n',
-      \   'required': ['input'],
-      \   'confirm': v:false,
-      \ },
-      \ 'delete': {
-      \   'prompt': 'Delete> ',
-      \   'execute': 'echo system("{git} branch -D {tag}")',
-      \   'multiple': v:true,
-      \   'keymap': 'ctrl-d',
-      \   'required': ['tag'],
-      \   'confirm': v:true,
-      \ },
-      \}
 
 let s:branch_keybindings = {}
-for s:action in keys(s:branch_actions)
-  let s:keymap = s:branch_actions[s:action]['keymap']
+for s:action in keys(g:fzf_branch_actions)
+  let s:keymap = g:fzf_branch_actions[s:action]['keymap']
   if !empty(s:keymap)
     let s:branch_keybindings[s:keymap] = s:action
   endif
 endfor
 
 let s:tag_keybindings = {}
-for s:action in keys(s:tag_actions)
-  let s:tag_keybindings[s:tag_actions[s:action]['keymap']] = s:action
+for s:action in keys(g:fzf_tag_actions)
+  let s:tag_keybindings[g:fzf_tag_actions[s:action]['keymap']] = s:action
 endfor
 
-let s:actions = {'tag': s:tag_actions, 'branch': s:branch_actions}
+let s:actions = {'tag': g:fzf_tag_actions, 'branch': g:fzf_branch_actions}
 let s:keybindings = {'tag': s:tag_keybindings, 'branch': s:branch_keybindings}
 
 
@@ -263,10 +200,10 @@ endfunction
 
 
 function! fzf_checkout#complete_tags(arglead, cmdline, cursorpos) abort
-  return keys(s:tag_actions)
+  return keys(g:fzf_tag_actions)
 endfunction
 
 
 function! fzf_checkout#complete_branches(arglead, cmdline, cursorpos) abort
-  return keys(s:branch_actions)
+  return keys(g:fzf_branch_actions)
 endfunction
