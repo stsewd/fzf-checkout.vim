@@ -77,31 +77,30 @@ function! s:execute(type, action, lines)
     return
   endif
 
-  let l:input = a:lines[0]
+  let l:input = shellescape(a:lines[0])
   let l:key = a:lines[1]
-
-  let l:branch = l:input
-  if len(a:lines) > 2
-    " TODO: support multiple branches
-    let l:branch = split(a:lines[2])[0]
-  endif
-
-  let l:branch = shellescape(l:branch)
-  let l:input = shellescape(l:input)
-
+  let l:actions = s:actions[a:type]
   let l:action = a:action
+
   if empty(l:action)
     let l:action = get(s:keybindings[a:type], l:key)
     if string(l:action) ==# '0'
       return
     endif
-  else
-    if l:key !=# 'enter'
-      return
+  elseif l:key !=# 'enter'
+    return
+  endif
+
+  let l:branch = ''
+  if len(a:lines) > 2
+    if l:actions[l:action]['multiple']
+      let l:branch = join(map(a:lines[2:], 'shellescape(split(v:val)[0])'), ' ')
+    else
+      let l:branch = shellescape(split(a:lines[2])[0])
     endif
   endif
 
-  let l:execute_command = s:actions[a:type][l:action]['execute']
+  let l:execute_command = l:actions[l:action]['execute']
   let l:execute_command = substitute(l:execute_command, '{git}', g:fzf_checkout_git_bin, 'g')
   let l:execute_command = substitute(l:execute_command, '{branch}', l:branch, 'g')
   let l:execute_command = substitute(l:execute_command, '{tag}', l:branch, 'g')
@@ -195,9 +194,7 @@ function! fzf_checkout#list(bang, type, options) abort
     endif
   endif
 
-  " TODO: Allow keybindings only if the action supports them.
   let l:valid_keys = join(l:keybindings, ',')
-
   let l:fzf_options = [
         \ '--prompt', l:prompt,
         \ '--header', l:current,
