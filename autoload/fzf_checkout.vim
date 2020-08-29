@@ -235,6 +235,7 @@ function! fzf_checkout#complete_tags(arglead, cmdline, cursorpos) abort
   return keys(g:fzf_tag_actions)
 endfunction
 
+
 function! fzf_checkout#complete_branches(arglead, cmdline, cursorpos) abort
   return keys(g:fzf_branch_actions) + keys(s:branch_filters)
 endfunction
