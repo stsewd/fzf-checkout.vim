@@ -21,14 +21,14 @@ See <https://github.com/junegunn/fzf/blob/master/README-VIM.md#installation>.
 
 # Usage
 
-Call `:GBranches [action]` or `GTags [action]` to execute an action over a branch or tag.
+Call `:GBranches [action] [filter]` or `:GTags [action]` to execute an action over a branch or tag.
 If no action is given, you can make use of defined keymaps to execute an action.
 
 ## Features
 
 - The current branch or commit will be show at the bottom
 - The first item on the list will be the previous branch
-- Type `:GBranches <tab>` or `GTags <tab>` to see all available actions
+- Type `:GBranches <tab>` or `GTags <tab>` to see all available actions and filters
 - Press `alt-enter` to track a remote branch locally (`origin/foo` becomes `foo`)
 - Press `ctrl-n` to create a branch or tag with the current query as name
 - Press `ctrl-d` to delete a branch or tag
