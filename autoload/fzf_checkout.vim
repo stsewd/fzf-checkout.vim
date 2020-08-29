@@ -16,24 +16,28 @@ let s:branch_actions = {
       \   'execute': 'echo system("{git} checkout {branch}")',
       \   'multiple': v:false,
       \   'keymap': 'enter',
+      \   'required': ['branch'],
       \ },
       \ 'track': {
       \   'prompt': 'Track> ',
       \   'execute': 'echo system("{git} checkout --track {branch}")',
       \   'multiple': v:false,
       \   'keymap': 'alt-enter',
+      \   'required': ['branch'],
       \ },
       \ 'create': {
       \   'prompt': 'Create> ',
       \   'execute': 'echo system("{git} checkout -b {input}")',
       \   'multiple': v:false,
       \   'keymap': 'ctrl-n',
+      \   'required': ['input'],
       \ },
       \ 'delete': {
       \   'prompt': 'Delete> ',
       \   'execute': 'echo system("{git} branch -D {branch}")',
       \   'multiple': v:true,
       \   'keymap': 'ctrl-d',
+      \   'required': ['branch'],
       \ },
       \}
 
@@ -43,18 +47,21 @@ let s:tag_actions = {
       \   'execute': 'echo system("{git} checkout {tag}")',
       \   'multiple': v:false,
       \   'keymap': 'enter',
+      \   'required': ['tag'],
       \ },
       \ 'create': {
       \   'prompt': 'Create> ',
       \   'execute': 'echo system("{git} tag {input}")',
       \   'multiple': v:false,
       \   'keymap': 'ctrl-n',
+      \   'required': ['input'],
       \ },
       \ 'delete': {
       \   'prompt': 'Delete> ',
       \   'execute': 'echo system("{git} branch -D {tag}")',
       \   'multiple': v:true,
       \   'keymap': 'ctrl-d',
+      \   'required': ['tag'],
       \ },
       \}
 
@@ -72,7 +79,7 @@ let s:actions = {'tag': s:tag_actions, 'branch': s:branch_actions}
 let s:keybindings = {'tag': s:tag_keybindings, 'branch': s:branch_keybindings}
 
 
-function! s:execute(type, action, lines)
+function! s:execute(type, action, lines) abort
   if len(a:lines) < 2
     return
   endif
@@ -100,6 +107,20 @@ function! s:execute(type, action, lines)
     endif
   endif
 
+  let l:required = l:actions[l:action]['required']
+
+  let l:branch_required = index(l:required, 'branch') || index(l:required, 'tag')
+  if l:branch_required && empty(trim(l:branch))
+    call s:warning('A ' . a:type . ' is required')
+    return
+  endif
+
+  let l:input_required = index(l:required, 'input')
+  if l:input_required && empty(trim(l:input))
+    call s:warning('An input is required')
+    return
+  endif
+
   let l:execute_command = l:actions[l:action]['execute']
   let l:execute_command = substitute(l:execute_command, '{git}', g:fzf_checkout_git_bin, 'g')
   let l:execute_command = substitute(l:execute_command, '{branch}', l:branch, 'g')
@@ -109,7 +130,12 @@ function! s:execute(type, action, lines)
 endfunction
 
 
-function! s:get_current_ref()
+function! s:warning(msg) abort
+    echohl WarningMsg | echomsg a:msg | echohl None
+endfunction
+
+
+function! s:get_current_ref() abort
   " Try to get the branch name or fallback to get the commit.
   let l:current = system('git symbolic-ref --short -q HEAD || git rev-parse --short HEAD')
   let l:current = substitute(l:current, '\n', '', 'g')
@@ -117,7 +143,7 @@ function! s:get_current_ref()
 endfunction
 
 
-function! s:get_previous_ref()
+function! s:get_previous_ref() abort
   " Try to get the branch name or fallback to get the commit.
   let l:previous = system('git rev-parse -q --abbrev-ref --symbolic-full-name "@{-1}"')
   if l:previous =~# '^\s*$' || l:previous =~# "'@{-1}'"
@@ -128,7 +154,7 @@ function! s:get_previous_ref()
 endfunction
 
 
-function! s:remove_branch(branches, pattern)
+function! s:remove_branch(branches, pattern) abort
   " Find first occurrence and remove it
   let l:index = match(a:branches, '^' . s:color_regex . a:pattern)
   if (l:index != -1)
