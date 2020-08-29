@@ -74,7 +74,10 @@ let s:tag_actions = {
 
 let s:branch_keybindings = {}
 for s:action in keys(s:branch_actions)
-  let s:branch_keybindings[s:branch_actions[s:action]['keymap']] = s:action
+  let s:keymap = s:branch_actions[s:action]['keymap']
+  if !empty(s:keymap)
+    let s:branch_keybindings[s:keymap] = s:action
+  endif
 endfor
 
 let s:tag_keybindings = {}
@@ -129,7 +132,10 @@ function! s:execute(type, action, lines) abort
   endif
 
   if l:actions[l:action]['confirm']
-    let l:choice = confirm('Do yo want to ' . l:action . ' ' . l:branch . '?', "&Yes\n&No", 2)
+    let l:choice = confirm(
+          \'Do yo want to ' . l:action . ' ' . l:branch . '?',
+          \ "&Yes\n&No", 2
+          \)
     if l:choice != 1
       return
     endif
@@ -181,10 +187,12 @@ endfunction
 
 function! fzf_checkout#list(bang, type, options) abort
   if a:type ==# 'branch'
-    let l:name = 'GCheckout'
+    let l:name = 'GBranches'
+    let l:prompt = 'Branches> '
     let l:subcommand = 'branch --all'
   elseif a:type ==# 'tag'
-    let l:name = 'GCheckoutTag'
+    let l:name = 'GTags'
+    let l:prompt = 'Tags> '
     let l:subcommand = 'tag'
   else
     return
@@ -204,9 +212,7 @@ function! fzf_checkout#list(bang, type, options) abort
     let l:keybindings = ['enter']
   endif
 
-  if empty(l:action)
-    let l:prompt = 'Checkout> '
-  else
+  if !empty(l:action)
     let l:prompt = l:actions[l:action]['prompt']
   endif
 
