@@ -157,7 +157,7 @@ function! fzf_checkout#list(bang, type, options) abort
 
   let l:action = 'checkout'
   let l:options = split(a:options)
-  if !empty(l:options) && get(l:actions, l:options[0])
+  if !empty(l:options) && has_key(l:actions, l:options[0])
     let l:action = l:options[0]
   endif
 
