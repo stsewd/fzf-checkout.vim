@@ -174,7 +174,7 @@ function! fzf_checkout#list(bang, type, options, deprecated) abort
     return
   endif
 
-    " Allow all keybindings if isn't a specific task.
+  " Allow all keybindings if isn't a specific task.
   if empty(l:action)
     let l:keybindings = keys(get(s:keybindings, a:type))
   else
