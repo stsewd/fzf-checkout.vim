@@ -20,13 +20,10 @@ let s:prefix = get(g:, 'fzf_command_prefix', '')
 " TODO: show a warning for old commands
 let s:branch_checkout_command = s:prefix . 'GCheckout'
 let s:tag_checkout_command = s:prefix . 'GCheckoutTag'
-
-let s:branch_command = s:prefix . 'GBranches'
-let s:tag_command = s:prefix . 'GTags'
-
 execute 'command! -bang -nargs=0 ' . s:branch_checkout_command . ' call fzf_checkout#list(<bang>0, "branch", "")'
 execute 'command! -bang -nargs=0 ' . s:tag_checkout_command . ' call fzf_checkout#list(<bang>0, "tag", "")'
 
-" TODO: autocomplete actions
-execute 'command! -bang -nargs=? ' . s:branch_command . ' call fzf_checkout#list(<bang>0, "branch", <q-args>)'
-execute 'command! -bang -nargs=? ' . s:tag_command . ' call fzf_checkout#list(<bang>0, "tag", <q-args>)'
+let s:branch_command = s:prefix . 'GBranches'
+let s:tag_command = s:prefix . 'GTags'
+execute 'command! -bang -nargs=? -complete=customlist,fzf_checkout#complete_branches ' . s:branch_command . ' call fzf_checkout#list(<bang>0, "branch", <q-args>)'
+execute 'command! -bang -nargs=? -complete=customlist,fzf_checkout#complete_tags ' . s:tag_command . ' call fzf_checkout#list(<bang>0, "tag", <q-args>)'
