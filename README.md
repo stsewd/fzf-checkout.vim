@@ -71,7 +71,7 @@ and the value is a dictionary with the following keys:
 - `prompt`: A string to use it as prompt when executing this action
 - `execute`: A string to be executed when performing this action.
   You can make use of the following placeholders:
-  - `{git}`: Replaced with the value from `g:fzf_checkout_git_bin``{branch}`
+  - `{git}`: Replaced with the value from `g:fzf_checkout_git_bin`
   - `{branch}`: Replaced with the branches selected
   - `{tag}`: Replaced with the tags selected
   - `{input}`: Replaced with the input from the user
