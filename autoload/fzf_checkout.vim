@@ -17,6 +17,7 @@ let s:branch_actions = {
       \   'multiple': v:false,
       \   'keymap': 'enter',
       \   'required': ['branch'],
+      \   'confirm': v:false,
       \ },
       \ 'track': {
       \   'prompt': 'Track> ',
@@ -24,6 +25,7 @@ let s:branch_actions = {
       \   'multiple': v:false,
       \   'keymap': 'alt-enter',
       \   'required': ['branch'],
+      \   'confirm': v:false,
       \ },
       \ 'create': {
       \   'prompt': 'Create> ',
@@ -31,6 +33,7 @@ let s:branch_actions = {
       \   'multiple': v:false,
       \   'keymap': 'ctrl-n',
       \   'required': ['input'],
+      \   'confirm': v:false,
       \ },
       \ 'delete': {
       \   'prompt': 'Delete> ',
@@ -38,6 +41,7 @@ let s:branch_actions = {
       \   'multiple': v:true,
       \   'keymap': 'ctrl-d',
       \   'required': ['branch'],
+      \   'confirm': v:true,
       \ },
       \}
 
@@ -48,6 +52,7 @@ let s:tag_actions = {
       \   'multiple': v:false,
       \   'keymap': 'enter',
       \   'required': ['tag'],
+      \   'confirm': v:false,
       \ },
       \ 'create': {
       \   'prompt': 'Create> ',
@@ -55,6 +60,7 @@ let s:tag_actions = {
       \   'multiple': v:false,
       \   'keymap': 'ctrl-n',
       \   'required': ['input'],
+      \   'confirm': v:false,
       \ },
       \ 'delete': {
       \   'prompt': 'Delete> ',
@@ -62,6 +68,7 @@ let s:tag_actions = {
       \   'multiple': v:true,
       \   'keymap': 'ctrl-d',
       \   'required': ['tag'],
+      \   'confirm': v:true,
       \ },
       \}
 
@@ -109,16 +116,23 @@ function! s:execute(type, action, lines) abort
 
   let l:required = l:actions[l:action]['required']
 
-  let l:branch_required = index(l:required, 'branch') || index(l:required, 'tag')
+  let l:branch_required = index(l:required, 'branch') >= 0 || index(l:required, 'tag') >= 0
   if l:branch_required && empty(trim(l:branch))
     call s:warning('A ' . a:type . ' is required')
     return
   endif
 
-  let l:input_required = index(l:required, 'input')
+  let l:input_required = index(l:required, 'input') >= 0
   if l:input_required && empty(trim(l:input))
     call s:warning('An input is required')
     return
+  endif
+
+  if l:actions[l:action]['confirm']
+    let l:choice = confirm('Do yo want to ' . l:action . ' ' . l:branch . '?', "&Yes\n&No", 2)
+    if l:choice != 1
+      return
+    endif
   endif
 
   let l:execute_command = l:actions[l:action]['execute']
