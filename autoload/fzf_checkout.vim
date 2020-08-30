@@ -235,10 +235,52 @@ endfunction
 
 
 function! fzf_checkout#complete_tags(arglead, cmdline, cursorpos) abort
-  return keys(g:fzf_tag_actions)
+  let l:cmdlist = split(a:cmdline)
+  if len(l:cmdlist) > 2 || len(l:cmdlist) > 1 && empty(a:arglead) 
+    return
+  endif
+
+  let l:options = keys(g:fzf_tag_actions)
+  if empty(a:arglead)
+    return l:options
+  endif
+
+  let l:candidates = []
+  for l:option in l:options
+    if l:option[:len(a:arglead) - 1] ==# a:arglead
+      call add(l:candidates, l:option)
+    endif
+  endfor
+
+  return l:options
 endfunction
 
 
 function! fzf_checkout#complete_branches(arglead, cmdline, cursorpos) abort
-  return keys(g:fzf_branch_actions) + keys(s:branch_filters)
+  let l:cmdlist = split(a:cmdline)
+  if len(l:cmdlist) > 3 || len(l:cmdlist) > 2 && empty(a:arglead)
+    return
+  endif
+
+  let l:options =  keys(g:fzf_branch_actions) + keys(s:branch_filters)
+  if len(l:cmdlist) == 2
+    if index(keys(g:fzf_branch_actions), l:cmdlist[1]) >= 0
+      let l:options =  keys(s:branch_filters)
+    elseif index(keys(s:branch_filters), l:cmdlist[1]) >= 0
+      let l:options =  keys(g:fzf_branch_actions)
+    endif
+  endif
+
+  if empty(a:arglead)
+    return l:options
+  endif
+
+  let l:candidates = []
+  for l:option in l:options
+    if l:option[:len(a:arglead) - 1] ==# a:arglead
+      call add(l:candidates, l:option)
+    endif
+  endfor
+
+  return l:candidates
 endfunction
