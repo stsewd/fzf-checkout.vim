@@ -201,6 +201,22 @@ let g:fzf_tag_actions = {
       \}
 ```
 
+Define a _diff_ action using [fugitive](https://github.com/tpope/vim-fugitive).
+You can use it with `:GBranches diff` or with `:GBranches` and pressing `ctrl-f`:
+
+```vim
+let g:fzf_branch_actions = {
+      \ 'diff': {
+      \   'prompt': 'Diff> ',
+      \   'execute': 'Git diff {branch}',
+      \   'multiple': v:false,
+      \   'keymap': 'ctrl-f',
+      \   'required': ['branch'],
+      \   'confirm': v:false,
+      \ },
+      \}
+```
+
 Define checkout as the only action for branches:
 
 ```vim
