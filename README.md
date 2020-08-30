@@ -118,6 +118,14 @@ let g:fzf_branch_actions = {
       \   'required': ['branch'],
       \   'confirm': v:true,
       \ },
+      \ 'merge':{
+      \   'prompt': 'Merge> ',
+      \   'execute': 'echo system("{git} merge {branch}")',
+      \   'multiple': v:false,
+      \   'keymap': 'ctrl-e',
+      \   'required': ['branch'],
+      \   'confirm': v:true,
+      \ },
       \}
 ```
 
