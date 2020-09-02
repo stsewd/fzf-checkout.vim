@@ -39,7 +39,8 @@ function! s:execute(type, action, lines) abort
     return
   endif
 
-  let l:input = shellescape(a:lines[0])
+  let l:trimchars = " \r\t\n\"'"
+  let l:input = trim(shellescape(a:lines[0]), l:trimchars)
   let l:key = a:lines[1]
   let l:actions = s:actions[a:type]
   let l:action = a:action
@@ -56,22 +57,26 @@ function! s:execute(type, action, lines) abort
   let l:branch = ''
   if len(a:lines) > 2
     if l:actions[l:action]['multiple']
-      let l:branch = join(map(a:lines[2:], 'shellescape(split(v:val)[0])'), ' ')
+      let l:branch = join(
+            \ map(a:lines[2:], 'trim(shellescape(split(v:val)[0]), l:trimchars)'),
+            \ ' '
+            \)
+      let l:branch = trim(l:branch)
     else
-      let l:branch = shellescape(split(a:lines[2])[0])
+      let l:branch = trim(shellescape(split(a:lines[2])[0]), l:trimchars)
     endif
   endif
 
   let l:required = l:actions[l:action]['required']
 
   let l:branch_required = index(l:required, 'branch') >= 0 || index(l:required, 'tag') >= 0
-  if l:branch_required && empty(trim(l:branch))
+  if l:branch_required && empty(l:branch)
     call s:warning('A ' . a:type . ' is required')
     return
   endif
 
   let l:input_required = index(l:required, 'input') >= 0
-  if l:input_required && empty(trim(l:input))
+  if l:input_required && empty(l:input)
     call s:warning('An input is required')
     return
   endif
