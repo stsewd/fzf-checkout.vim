@@ -32,6 +32,8 @@ If no action is given, you can make use of defined keymaps to execute an action.
 - Press `alt-enter` to track a remote branch locally (`origin/foo` becomes `foo`)
 - Press `ctrl-n` to create a branch or tag with the current query as name
 - Press `ctrl-d` to delete a branch or tag
+- Press `ctrl-e` to merge a branch
+- Press `ctrl-r' to rebase a branch
 - Ask for confirmation for irreversible actions like delete
 - Define your own actions
 
@@ -123,6 +125,14 @@ let g:fzf_branch_actions = {
       \   'execute': 'echo system("{git} merge {branch}")',
       \   'multiple': v:false,
       \   'keymap': 'ctrl-e',
+      \   'required': ['branch'],
+      \   'confirm': v:true,
+      \ },
+      \ 'rebase':{
+      \   'prompt': 'Rebase> ',
+      \   'execute': 'echo system("{git} rebase {branch}")',
+      \   'multiple': v:false,
+      \   'keymap': 'ctrl-r',
       \   'required': ['branch'],
       \   'confirm': v:true,
       \ },
