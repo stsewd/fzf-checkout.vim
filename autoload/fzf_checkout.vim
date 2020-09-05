@@ -91,12 +91,17 @@ function! s:execute(type, action, lines) abort
     endif
   endif
 
-  let l:execute_command = l:actions[l:action]['execute']
-  let l:execute_command = substitute(l:execute_command, '{git}', g:fzf_checkout_git_bin, 'g')
-  let l:execute_command = substitute(l:execute_command, '{branch}', l:branch, 'g')
-  let l:execute_command = substitute(l:execute_command, '{tag}', l:branch, 'g')
-  let l:execute_command = substitute(l:execute_command, '{input}', l:input, 'g')
-  execute l:execute_command
+  let l:Execute_command = l:actions[l:action]['execute']
+  if type(l:Execute_command) == v:t_string
+    let l:Execute_command = substitute(l:Execute_command, '{git}', g:fzf_checkout_git_bin, 'g')
+    let l:Execute_command = substitute(l:Execute_command, '{branch}', l:branch, 'g')
+    let l:Execute_command = substitute(l:Execute_command, '{tag}', l:branch, 'g')
+    let l:Execute_command = substitute(l:Execute_command, '{input}', l:input, 'g')
+    execute l:Execute_command
+  elseif type(l:Execute_command) == v:t_func
+    call l:Execute_command(g:fzf_checkout_git_bin, l:branch, l:input)
+  endif
+
 endfunction
 
 
