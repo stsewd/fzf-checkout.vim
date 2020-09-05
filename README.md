@@ -33,7 +33,7 @@ If no action is given, you can make use of defined keymaps to execute an action.
 - Press `ctrl-n` to create a branch or tag with the current query as name
 - Press `ctrl-d` to delete a branch or tag
 - Press `ctrl-e` to merge a branch
-- Press `ctrl-r' to rebase a branch
+- Press `ctrl-r` to rebase a branch
 - Ask for confirmation for irreversible actions like delete
 - Define your own actions
 
