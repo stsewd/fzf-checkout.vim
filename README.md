@@ -81,7 +81,7 @@ and the value is a dictionary with the following keys:
   - `{branch}`: Replaced with the branches selected
   - `{tag}`: Replaced with the tags selected
   - `{input}`: Replaced with the input from the user
-- `execute`: A function references with `git`, `branch`/`tag`, `input` as arguments.
+- `execute`: A function reference with `git`, `branch`/`tag`, `input` as arguments.
 - `multiple`: The actions supports multiple selections?
 - `keymap`: The keymap used to execute this action (it can be empty)
 - `required`: A list of required elements (`['branch', 'tag', 'input']`) to perform this action

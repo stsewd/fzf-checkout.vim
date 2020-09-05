@@ -92,7 +92,6 @@ function! s:execute(type, action, lines) abort
   endif
 
   let l:Execute_command = l:actions[l:action]['execute']
-
   if type(l:Execute_command) == v:t_string
     let l:Execute_command = substitute(l:Execute_command, '{git}', g:fzf_checkout_git_bin, 'g')
     let l:Execute_command = substitute(l:Execute_command, '{branch}', l:branch, 'g')
