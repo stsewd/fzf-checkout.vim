@@ -247,29 +247,18 @@ endfunction
 function! fzf_checkout#complete_tags(arglead, cmdline, cursorpos) abort
   let l:cmdlist = split(a:cmdline)
   if len(l:cmdlist) > 2 || len(l:cmdlist) > 1 && empty(a:arglead) 
-    return
+    return ''
   endif
 
   let l:options = keys(g:fzf_tag_actions)
-  if empty(a:arglead)
-    return l:options
-  endif
-
-  let l:candidates = []
-  for l:option in l:options
-    if l:option[:len(a:arglead) - 1] ==# a:arglead
-      call add(l:candidates, l:option)
-    endif
-  endfor
-
-  return l:options
+  return join(l:options, "\n")
 endfunction
 
 
 function! fzf_checkout#complete_branches(arglead, cmdline, cursorpos) abort
   let l:cmdlist = split(a:cmdline)
   if len(l:cmdlist) > 3 || len(l:cmdlist) > 2 && empty(a:arglead)
-    return
+    return ''
   endif
 
   let l:options =  keys(g:fzf_branch_actions) + keys(s:branch_filters)
@@ -281,16 +270,5 @@ function! fzf_checkout#complete_branches(arglead, cmdline, cursorpos) abort
     endif
   endif
 
-  if empty(a:arglead)
-    return l:options
-  endif
-
-  let l:candidates = []
-  for l:option in l:options
-    if l:option[:len(a:arglead) - 1] ==# a:arglead
-      call add(l:candidates, l:option)
-    endif
-  endfor
-
-  return l:candidates
+  return join(l:options, "\n")
 endfunction
