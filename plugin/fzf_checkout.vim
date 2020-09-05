@@ -45,6 +45,14 @@ let s:branch_actions = {
       \   'required': ['branch'],
       \   'confirm': v:true,
       \ },
+      \ 'rebase':{
+      \   'prompt': 'Rebase> ',
+      \   'execute': 'echo system("{git} rebase {branch}")',
+      \   'multiple': v:false,
+      \   'keymap': 'ctrl-r',
+      \   'required': ['branch'],
+      \   'confirm': v:true,
+      \ },
       \}
 
 let s:tag_actions = {
