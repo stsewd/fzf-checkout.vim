@@ -1,0 +1,213 @@
+*fzf-checkout.txt*  Manage branches and tags with fzf
+
+Author: Santos Gallegos <https://github.com/stsewd>
+License: MIT
+Repo: https://github.com/stsewd/fzf-checkout.vim
+
+                              Type |gO| to see the table of contents (Neovim).
+
+==============================================================================
+
+                                                                *fzf-checkout*
+FEATURES                                               *fzf-checkout-features*
+
+- The current branch or commit will be show at the bottom
+- The first item on the list will be the previous branch/tag
+- Press <alt-enter> to track a remote branch locally (`origin/foo` becomes `foo`)
+- Press <ctrl-n> to create a branch or tag with the current query as name
+- Press <ctrl-d> to delete a branch or tag
+- Press <ctrl-e> to merge a branch
+- Press <ctrl-r> to rebase a branch
+- Ask for confirmation for irreversible actions like delete
+- Define your own actions
+
+==============================================================================
+
+COMMANDS                                               *fzf-checkout-commands*
+
+                                                                  *:GBranches*
+                                                     *fzf-checkout-:GBranches*
+:GBranches [action] [filter]~
+
+   Execute [action] over a list of all branches or filtered branches, if not
+   action is given you can make use of keymaps to execute an action.
+
+   List of available actions and their keymaps:
+
+   - checkout: <enter>
+   - track: <alt-enter>
+   - create: <ctrl-n>
+   - delete: <ctrl-d>
+   - merge: <ctrl-e>
+   - rebase: <ctrl-r>
+
+   [filter] can be any of: `--all` (default), `--locals`, or `--remotes`.
+
+                                                                      *:GTags*
+                                                         *fzf-checkout-:GTags*
+:GTags [action]~
+
+   Execute [action] over a list of tags, if not action is given you can make
+   use of keymaps to execute an action.
+
+   List of available actions and their keymaps:
+
+   - checkout: <enter>
+   - create: <ctrl-n>
+   - delete: <ctrl-d>
+
+==============================================================================
+
+SETTINGS                                               *fzf-checkout-settings*
+
+
+If you have |fzf-vim| (https://github.com/junegunn/fzf.vim) installed,
+this plugin will respect your |g:fzf_command_prefix| setting.
+
+                                                      *g:fzf_checkout_git_bin*
+g:fzf_checkout_git_bin~
+
+Name of the `git` binary.
+
+>
+   let g:fzf_checkout_git_bin = 'git'
+<
+                                                  *g:fzf_checkout_git_options*
+g:fzf_checkout_git_options~
+
+additional options to pass to the `git` command.
+
+>
+   let g:fzf_checkout_git_options = ''
+<
+
+NOTE: It is not recommended to change the `--color` and `--format` parameters,
+as they are used by the plugin and changing them may break something.
+
+                                           *g:fzf_checkout_previous_ref_first*
+g:fzf_checkout_previous_ref_first~
+
+Display previously used branch first independent of specified sorting.
+
+>
+   let g:fzf_checkout_previous_ref_first = v:true
+<
+
+                                                        *g:fzf_branch_actions*
+g:fzf_branch_actions~
+
+A dictionary of actions for branches. The keys are the name of the action,
+and the value is a dictionary with the following keys:
+
+- `prompt`: A string to use it as prompt when executing this action
+- `execute`: A string to be executed when performing this action.
+  You can make use of the following placeholders:
+  - `{git}`: Replaced with the value from |g:fzf_checkout_git_bin|
+  - `{branch}`: Replaced with the branches selected
+  - `{tag}`: Replaced with the tags selected
+  - `{input}`: Replaced with the input from the user
+- `execute`: A function reference with `git`, `branch`/`tag`, `input` as arguments.
+- `multiple`: The action supports multiple selections?
+- `keymap`: The keymap used to execute this action (can be empty)
+- `required`: A list of required elements (`['branch', 'tag', 'input']`) to perform this action
+- `confirm`: Ask for confirmation before executing this action?
+
+>
+   let g:fzf_branch_actions = {
+         \ 'checkout': {
+         \   'prompt': 'Checkout> ',
+         \   'execute': 'echo system("{git} checkout {branch}")',
+         \   'multiple': v:false,
+         \   'keymap': 'enter',
+         \   'required': ['branch'],
+         \   'confirm': v:false,
+         \ },
+         \ 'track': {
+         \   'prompt': 'Track> ',
+         \   'execute': 'echo system("{git} checkout --track {branch}")',
+         \   'multiple': v:false,
+         \   'keymap': 'alt-enter',
+         \   'required': ['branch'],
+         \   'confirm': v:false,
+         \ },
+         \ 'create': {
+         \   'prompt': 'Create> ',
+         \   'execute': 'echo system("{git} checkout -b {input}")',
+         \   'multiple': v:false,
+         \   'keymap': 'ctrl-n',
+         \   'required': ['input'],
+         \   'confirm': v:false,
+         \ },
+         \ 'delete': {
+         \   'prompt': 'Delete> ',
+         \   'execute': 'echo system("{git} branch -D {branch}")',
+         \   'multiple': v:true,
+         \   'keymap': 'ctrl-d',
+         \   'required': ['branch'],
+         \   'confirm': v:true,
+         \ },
+         \ 'merge':{
+         \   'prompt': 'Merge> ',
+         \   'execute': 'echo system("{git} merge {branch}")',
+         \   'multiple': v:false,
+         \   'keymap': 'ctrl-e',
+         \   'required': ['branch'],
+         \   'confirm': v:true,
+         \ },
+         \ 'rebase':{
+         \   'prompt': 'Rebase> ',
+         \   'execute': 'echo system("{git} rebase {branch}")',
+         \   'multiple': v:false,
+         \   'keymap': 'ctrl-r',
+         \   'required': ['branch'],
+         \   'confirm': v:true,
+         \ },
+         \}
+<
+
+                                                           *g:fzf_tag_actions*
+g:fzf_tag_actions~
+
+Same as |g:fzf_branch_actions|, but used to define tag actions.
+
+>
+   let g:fzf_tag_actions = {
+         \ 'checkout': {
+         \   'prompt': 'Checkout> ',
+         \   'execute': 'echo system("{git} checkout {tag}")',
+         \   'multiple': v:false,
+         \   'keymap': 'enter',
+         \   'required': ['tag'],
+         \   'confirm': v:false,
+         \ },
+         \ 'create': {
+         \   'prompt': 'Create> ',
+         \   'execute': 'echo system("{git} tag {input}")',
+         \   'multiple': v:false,
+         \   'keymap': 'ctrl-n',
+         \   'required': ['input'],
+         \   'confirm': v:false,
+         \ },
+         \ 'delete': {
+         \   'prompt': 'Delete> ',
+         \   'execute': 'echo system("{git} branch -D {tag}")',
+         \   'multiple': v:true,
+         \   'keymap': 'ctrl-d',
+         \   'required': ['tag'],
+         \   'confirm': v:true,
+         \ },
+         \}
+<
+
+                                               *g:fzf_checkout_merge_settings*
+g:fzf_checkout_merge_settings~
+
+Set it to `v:true` if you want to override some options from
+|g:fzf_branch_actions| or |g:fzf_tag_actions|.
+Set it to `v:false` if you want to have full control over the defined actions.
+
+>
+   let g:fzf_checkout_merge_settings= v:true
+<
+
+vim:tw=78:ts=8:ft=help:norl:
