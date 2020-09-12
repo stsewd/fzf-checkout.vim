@@ -121,7 +121,7 @@ endfunction
 function! s:get_previous_ref() abort
   " Try to get the branch name or fallback to get the commit.
   let l:previous = system('git rev-parse -q --abbrev-ref --symbolic-full-name "@{-1}"')
-  if l:previous =~# '^\s*$' || l:previous =~# "'@{-1}'"
+  if v:shell_error != 0 || l:previous =~# '^\s*$'
     let l:previous = system('git rev-parse --short -q "@{-1}"')
   endif
   let l:previous = substitute(l:previous, '\n', '', 'g')
