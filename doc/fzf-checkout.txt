@@ -1,4 +1,5 @@
 *fzf-checkout.txt*  Manage branches and tags with fzf
+*fzf-checkout*
 
 Author: Santos Gallegos <https://github.com/stsewd>
 License: MIT
@@ -8,7 +9,6 @@ Repo: https://github.com/stsewd/fzf-checkout.vim
 
 ==============================================================================
 
-                                                                *fzf-checkout*
 FEATURES                                               *fzf-checkout-features*
 
 - The current branch or commit will be show at the bottom
