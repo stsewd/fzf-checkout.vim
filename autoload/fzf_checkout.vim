@@ -205,7 +205,14 @@ function! fzf_checkout#list(bang, type, options, deprecated) abort
         \ g:fzf_checkout_git_options
         \)
 
-  let l:git_output = split(system(l:git_cmd), '\n')
+  let l:git_output = system(l:git_cmd)
+
+  if v:shell_error != 0
+    echo l:git_output
+    return
+  endif
+
+  let l:git_output = split(l:git_output, '\n')
 
   " Delete the current and HEAD from the list.
   let l:current = s:get_current_ref()
@@ -246,7 +253,7 @@ endfunction
 
 function! fzf_checkout#complete_tags(arglead, cmdline, cursorpos) abort
   let l:cmdlist = split(a:cmdline)
-  if len(l:cmdlist) > 2 || len(l:cmdlist) > 1 && empty(a:arglead) 
+  if len(l:cmdlist) > 2 || len(l:cmdlist) > 1 && empty(a:arglead)
     return ''
   endif
 
