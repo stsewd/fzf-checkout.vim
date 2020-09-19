@@ -24,6 +24,8 @@ Execute (Create a new tag):
   call system('git tag v1')
   call system('git checkout v1')
 Then (Get the seven characters length hash from the new tag):
+  AssertNotEqual 'master', fzf_checkout#get_current_ref()
+  AssertNotEqual 'another-branch', fzf_checkout#get_current_ref()
   AssertEqual 7, len(fzf_checkout#get_current_ref())
 
 Execute (Teardown):
