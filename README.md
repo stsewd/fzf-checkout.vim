@@ -1,6 +1,7 @@
 # fzf-checkout.vim
 
 [![CI](https://github.com/stsewd/fzf-checkout.vim/workflows/CI/badge.svg)](https://github.com/stsewd/fzf-checkout.vim/actions?query=workflow%3ACI+branch%3Amaster)
+[![Linter](https://github.com/stsewd/fzf-checkout.vim/workflows/linter/badge.svg)](https://github.com/stsewd/fzf-checkout.vim/actions?query=workflow%3Alinter+branch%3Amaster)
 
 Manage branches and tags with [fzf](https://github.com/junegunn/fzf).
 
