@@ -118,7 +118,7 @@ function! fzf_checkout#get_current_ref() abort
 endfunction
 
 
-function! s:get_previous_ref() abort
+function! fzf_checkout#get_previous_ref() abort
   " Try to get the branch name or fallback to get the commit.
   let l:previous = system('git rev-parse -q --abbrev-ref --symbolic-full-name "@{-1}"')
   if v:shell_error != 0 || l:previous =~# '^\s*$'
@@ -221,7 +221,7 @@ function! fzf_checkout#list(bang, type, options, deprecated) abort
 
   if g:fzf_checkout_previous_ref_first
     " Put previous ref first
-    let l:previous = s:get_previous_ref()
+    let l:previous = fzf_checkout#get_previous_ref()
     if !empty(l:previous)
       if (s:remove_branch(l:git_output, escape(l:previous, '/')))
         call insert(l:git_output, system(l:git_cmd . ' --list ' . l:previous), 0)
