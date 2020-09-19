@@ -34,7 +34,8 @@ let s:branch_filters = {
       \}
 
 
-function! s:execute(type, action, lines) abort
+function! fzf_checkout#execute(type, action, lines) abort
+  echomsg a:type a:action a:lines
   if len(a:lines) < 2
     return
   endif
@@ -243,7 +244,7 @@ function! fzf_checkout#list(bang, type, options, deprecated) abort
         \ l:name,
         \ {
         \   'source': l:git_output,
-        \   'sink*': function('s:execute', [a:type, l:action]),
+        \   'sink*': function('fzf_checkout#execute', [a:type, l:action]),
         \   'options': l:fzf_options,
         \ },
         \ a:bang,
