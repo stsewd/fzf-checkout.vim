@@ -110,7 +110,7 @@ function! s:warning(msg) abort
 endfunction
 
 
-function! s:get_current_ref() abort
+function! fzf_checkout#get_current_ref() abort
   " Try to get the branch name or fallback to get the commit.
   let l:current = system('git symbolic-ref --short -q HEAD || git rev-parse --short HEAD')
   let l:current = substitute(l:current, '\n', '', 'g')
@@ -215,7 +215,7 @@ function! fzf_checkout#list(bang, type, options, deprecated) abort
   let l:git_output = split(l:git_output, '\n')
 
   " Delete the current and HEAD from the list.
-  let l:current = s:get_current_ref()
+  let l:current = fzf_checkout#get_current_ref()
   call s:remove_branch(l:git_output, escape(l:current, '/'))
   call s:remove_branch(l:git_output, '\(origin/\)\?HEAD')
 

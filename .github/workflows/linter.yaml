@@ -1,4 +1,4 @@
-name: CI
+name: linter
 
 on: [push, pull_request]
 

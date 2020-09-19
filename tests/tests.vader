@@ -1,0 +1,31 @@
+---------------
+- Test get refs
+---------------
+
+Execute (Setup):
+  call system('mkdir -p tests/repo/')
+  cd tests/repo/
+  call system('git init .')
+  call system('touch file.vim')
+  call system('git add file.vim')
+  call system('git commit -m "New file"')
+
+Execute (Checkout to master):
+  call system('git checkout master')
+Then (Get master branch):
+  AssertEqual 'master', fzf_checkout#get_current_ref()
+
+Execute (Create and checkout to a new branch):
+  call system('git checkout -b another-branch')
+Then (Get new created branch):
+  AssertEqual 'another-branch', fzf_checkout#get_current_ref()
+
+Execute (Create a new tag):
+  call system('git tag v1')
+  call system('git checkout v1')
+Then (Get the seven characters length hash from the new tag):
+  AssertEqual 7, len(fzf_checkout#get_current_ref())
+
+Execute (Teardown):
+  cd ../../
+  call system('rm -rf tests/repo/')
