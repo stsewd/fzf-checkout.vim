@@ -6,6 +6,8 @@ Execute (Setup):
   call system('mkdir -p tests/repo/')
   cd tests/repo/
   call system('git init .')
+  call system('git config user.email test@test.com')
+  call system('git config user.name testing')
   call system('touch file.vim')
   call system('git add file.vim')
   call system('git commit -m "New file"')
