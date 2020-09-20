@@ -6,3 +6,6 @@ let g:fzf_branch_actions = {
       \ 'delete': {'confirm': v:false},
       \ 'merge': {'confirm': v:false},
       \}
+let g:fzf_tag_actions = {
+      \ 'delete': {'confirm': v:false},
+      \}
