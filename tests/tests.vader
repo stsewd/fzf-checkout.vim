@@ -16,14 +16,18 @@ Execute (Setup):
   call system('git add file2.vim')
   call system('git commit -m "New file"')
   call system('git tag v2')
+  call system('git checkout master')
+  call system('git checkout -b another-branch')
+  call system('git commit --allow-empty -m "New commit"')
+  call system('git checkout master')
 
 Execute (Checkout to master):
   call system('git checkout master')
 Then (The current branch is master):
   AssertEqual 'master', fzf_checkout#get_current_ref()
 
-Execute (Create and checkout to another-branch):
-  call system('git checkout -b another-branch')
+Execute (Checkout to another-branch):
+  call system('git checkout another-branch')
 Then (The current branch is another-branch):
   AssertEqual 'another-branch', fzf_checkout#get_current_ref()
 
@@ -101,6 +105,23 @@ Execute (Delete action over another-new-branch):
 Then (another-new-branch no longer exists):
   call system('git checkout another-new-branch')
   AssertNotEqual 0, v:shell_error
+
+Execute (Merge action over another-branch):
+  call system('git checkout master')
+  call fzf_checkout#execute(
+         \ 'branch',
+         \ '',
+         \ ['', 'ctrl-e', 'another-branch  Add the other badge 19 hours ago -> 8ed668b'],
+         \)
+Then (another-branch was merged into master):
+  let last_commit_master = system('git show HEAD')
+
+  call system('git checkout another-branch')
+  AssertEqual 0, v:shell_error
+
+  let last_commit_another_branch = system('git show HEAD')
+
+  AssertEqual last_commit_master, last_commit_another_branch
 
 Execute (Teardown):
   cd ../../
