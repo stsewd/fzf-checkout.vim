@@ -35,7 +35,6 @@ let s:branch_filters = {
 
 
 function! fzf_checkout#execute(type, action, lines) abort
-  echomsg a:type a:action a:lines
   if len(a:lines) < 2
     return
   endif
