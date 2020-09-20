@@ -74,7 +74,7 @@ let s:tag_actions = {
       \ },
       \ 'delete': {
       \   'prompt': 'Delete> ',
-      \   'execute': 'echo system("{git} branch -D {tag}")',
+      \   'execute': 'echo system("{git} tag -d {tag}")',
       \   'multiple': v:true,
       \   'keymap': 'ctrl-d',
       \   'required': ['tag'],

@@ -133,6 +133,16 @@ Execute (Create action over new_tag):
 Then (now there are three tags):
   AssertEqual 3, len(split(system('git tag'), '\n'))
 
+Execute (Delete action over new_tag):
+  AssertEqual 3, len(split(system('git tag'), '\n'))
+  call fzf_checkout#execute(
+         \ 'tag',
+         \ '',
+         \ ['', 'ctrl-d', 'new_tag  Add the other badge 19 hours ago -> 8ed668b'],
+         \)
+Then (now there are two tags):
+  AssertEqual 2, len(split(system('git tag'), '\n'))
+
 Execute (Teardown):
   cd ../../
   call system('rm -rf tests/repo/')
