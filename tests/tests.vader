@@ -123,7 +123,7 @@ Then (another-branch was merged into master):
 
   AssertEqual last_commit_master, last_commit_another_branch
 
-Execute (Create a new tag):
+Execute (Create action over new_tag):
   AssertEqual 2, len(split(system('git tag'), '\n'))
   call fzf_checkout#execute(
          \ 'tag',
