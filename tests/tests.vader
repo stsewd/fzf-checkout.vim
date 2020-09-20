@@ -91,17 +91,16 @@ Execute (Create action over another-new-branch):
 Then (The current branch is another-new-branch):
   AssertEqual 'another-new-branch', fzf_checkout#get_current_ref()
 
-
 Execute (Delete action over another-new-branch):
+  call system('git checkout master')
   call fzf_checkout#execute(
          \ 'branch',
          \ '',
-         \ ['', 'enter', 'another-new-branch  Add the other badge 19 hours ago -> 8ed668b'],
+         \ ['', 'ctrl-d', 'another-new-branch  Add the other badge 19 hours ago -> 8ed668b'],
          \)
 Then (another-new-branch no longer exists):
-  call system(git checkout another-new-branch)
+  call system('git checkout another-new-branch')
   AssertNotEqual 0, v:shell_error
-
 
 Execute (Teardown):
   cd ../../
