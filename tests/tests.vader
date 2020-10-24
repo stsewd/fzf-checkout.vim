@@ -90,7 +90,7 @@ Execute (Create action over another-new-branch):
   call fzf_checkout#execute(
          \ 'branch',
          \ '',
-         \ ['another-new-branch', 'ctrl-n'],
+         \ ['another-new-branch', 'ctrl-b'],
          \)
 Then (The current branch is another-new-branch):
   AssertEqual 'another-new-branch', fzf_checkout#get_current_ref()
@@ -128,7 +128,7 @@ Execute (Create action over new_tag):
   call fzf_checkout#execute(
          \ 'tag',
          \ '',
-         \ ['new_tag', 'ctrl-n'],
+         \ ['new_tag', 'ctrl-t'],
          \)
 Then (now there are three tags):
   AssertEqual 3, len(split(system('git tag'), '\n'))

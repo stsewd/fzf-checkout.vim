@@ -14,7 +14,7 @@ FEATURES                                               *fzf-checkout-features*
 - The current branch or commit will be show at the bottom
 - The first item on the list will be the previous branch/tag
 - Press <alt-enter> to track a remote branch locally (`origin/foo` becomes `foo`)
-- Press <ctrl-n> to create a branch or tag with the current query as name
+- Press <ctrl-b> to create a branch or tag with the current query as name
 - Press <ctrl-d> to delete a branch or tag
 - Press <ctrl-e> to merge a branch
 - Press <ctrl-r> to rebase a branch
@@ -36,7 +36,7 @@ COMMANDS                                               *fzf-checkout-commands*
 
    - checkout: <enter>
    - track: <alt-enter>
-   - create: <ctrl-n>
+   - create: <ctrl-b>
    - delete: <ctrl-d>
    - merge: <ctrl-e>
    - rebase: <ctrl-r>
@@ -53,7 +53,7 @@ COMMANDS                                               *fzf-checkout-commands*
    List of available actions and their keymaps:
 
    - checkout: <enter>
-   - create: <ctrl-n>
+   - create: <ctrl-t>
    - delete: <ctrl-d>
 
 ==============================================================================
@@ -134,7 +134,7 @@ and the value is a dictionary with the following keys:
          \   'prompt': 'Create> ',
          \   'execute': 'echo system("{git} checkout -b {input}")',
          \   'multiple': v:false,
-         \   'keymap': 'ctrl-n',
+         \   'keymap': 'ctrl-b',
          \   'required': ['input'],
          \   'confirm': v:false,
          \ },
@@ -184,7 +184,7 @@ Same as |g:fzf_branch_actions|, but used to define tag actions.
          \   'prompt': 'Create> ',
          \   'execute': 'echo system("{git} tag {input}")',
          \   'multiple': v:false,
-         \   'keymap': 'ctrl-n',
+         \   'keymap': 'ctrl-t',
          \   'required': ['input'],
          \   'confirm': v:false,
          \ },
