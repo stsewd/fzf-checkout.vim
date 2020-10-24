@@ -68,7 +68,7 @@ let s:tag_actions = {
       \   'prompt': 'Create> ',
       \   'execute': 'echo system("{git} tag {input}")',
       \   'multiple': v:false,
-      \   'keymap': 'ctrl-t',
+      \   'keymap': 'ctrl-b',
       \   'required': ['input'],
       \   'confirm': v:false,
       \ },

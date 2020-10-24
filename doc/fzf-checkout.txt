@@ -53,7 +53,7 @@ COMMANDS                                               *fzf-checkout-commands*
    List of available actions and their keymaps:
 
    - checkout: <enter>
-   - create: <ctrl-t>
+   - create: <ctrl-b>
    - delete: <ctrl-d>
 
 ==============================================================================
@@ -184,7 +184,7 @@ Same as |g:fzf_branch_actions|, but used to define tag actions.
          \   'prompt': 'Create> ',
          \   'execute': 'echo system("{git} tag {input}")',
          \   'multiple': v:false,
-         \   'keymap': 'ctrl-t',
+         \   'keymap': 'ctrl-b',
          \   'required': ['input'],
          \   'confirm': v:false,
          \ },

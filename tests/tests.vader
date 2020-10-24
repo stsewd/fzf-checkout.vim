@@ -128,7 +128,7 @@ Execute (Create action over new_tag):
   call fzf_checkout#execute(
          \ 'tag',
          \ '',
-         \ ['new_tag', 'ctrl-t'],
+         \ ['new_tag', 'ctrl-b'],
          \)
 Then (now there are three tags):
   AssertEqual 3, len(split(system('git tag'), '\n'))
