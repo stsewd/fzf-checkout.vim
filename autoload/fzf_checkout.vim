@@ -238,6 +238,7 @@ function! fzf_checkout#list(bang, type, options, deprecated) abort
         \ '--expect', l:valid_keys,
         \ '--ansi',
         \ '--print-query',
+        \ '--no-sort',
         \]
   call fzf#run(fzf#wrap(
         \ l:name,
