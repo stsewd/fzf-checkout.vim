@@ -5,8 +5,7 @@
 
 Manage branches and tags with [fzf](https://github.com/junegunn/fzf).
 
-![gcheckout](https://user-images.githubusercontent.com/4975310/82736850-2d0bfb00-9cf2-11ea-8eec-8b84e903e805.png)
-![gcheckouttag](https://user-images.githubusercontent.com/4975310/82736909-a3106200-9cf2-11ea-8974-dc64d8011f6c.png)
+![fzf-checkout](https://user-images.githubusercontent.com/4975310/105560618-4da5ae00-5ce2-11eb-9cf3-24c9729d4e80.gif)
 
 # Installation
 
