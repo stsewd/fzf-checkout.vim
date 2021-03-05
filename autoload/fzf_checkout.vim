@@ -94,6 +94,7 @@ function! fzf_checkout#execute(type, action, lines) abort
   let l:Execute_command = l:actions[l:action]['execute']
   if type(l:Execute_command) == v:t_string
     let l:Execute_command = substitute(l:Execute_command, '{git}', g:fzf_checkout_git_bin, 'g')
+    let l:Execute_command = substitute(l:Execute_command, '{wd}', fzf_checkout#get_wd(), 'g')
     let l:Execute_command = substitute(l:Execute_command, '{branch}', l:branch, 'g')
     let l:Execute_command = substitute(l:Execute_command, '{tag}', l:branch, 'g')
     let l:Execute_command = substitute(l:Execute_command, '{input}', l:input, 'g')
@@ -198,8 +199,9 @@ function! fzf_checkout#list(bang, type, options, deprecated) abort
     let l:prompt = l:actions[l:action]['prompt']
   endif
 
-  let l:git_cmd = printf('%s %s --color=always --sort=refname:short --format=%s %s',
+  let l:git_cmd = printf('%s %s %s --color=always --sort=refname:short --format=%s %s',
         \ g:fzf_checkout_git_bin,
+        \ fzf_checkout#get_wd(),
         \ l:subcommand,
         \ s:format,
         \ g:fzf_checkout_git_options
@@ -280,3 +282,12 @@ function! fzf_checkout#complete_branches(arglead, cmdline, cursorpos) abort
 
   return join(l:options, "\n")
 endfunction
+
+function! fzf_checkout#get_wd() abort
+  if get(g:, 'fzf_checkout_enable_submodules', 0)
+    return "-C ".shellescape(expand("%:p:h"))
+  else
+    return ""
+  endif
+endfunction
+
