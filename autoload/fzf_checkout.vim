@@ -285,9 +285,9 @@ endfunction
 
 function! fzf_checkout#get_wd() abort
   if get(g:, 'fzf_checkout_enable_submodules', v:false)
-    return "-C ".shellescape(expand("%:p:h"))
+    return '-C '.shellescape(expand('%:p:h'))
   else
-    return ""
+    return ''
   endif
 endfunction
 
