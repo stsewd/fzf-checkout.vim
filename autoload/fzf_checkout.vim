@@ -113,7 +113,14 @@ endfunction
 
 function! fzf_checkout#get_current_ref() abort
   " Try to get the branch name or fallback to get the commit.
-  let l:current = system('git symbolic-ref --short -q HEAD || git rev-parse --short HEAD')
+  let l:git_wd = fzf_checkout#get_wd()
+  let l:git_cmd = printf('%s %s symbolic-ref --short -q HEAD || %s %s rev-parse --short HEAD',
+        \ g:fzf_checkout_git_bin,
+        \ l:git_wd,
+        \ g:fzf_checkout_git_bin,
+        \ l:git_wd
+        \)
+  let l:current = system(l:git_cmd)
   let l:current = substitute(l:current, '\n', '', 'g')
   return l:current
 endfunction
