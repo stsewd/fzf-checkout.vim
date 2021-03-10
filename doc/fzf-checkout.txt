@@ -210,4 +210,15 @@ Set it to `v:false` if you want to have full control over the defined actions.
    let g:fzf_checkout_merge_settings= v:true
 <
 
+                                               *g:fzf_checkout_sort*
+g:fzf_checkout_sort
+
+Set a custom sorting algorithe for the branches and tags as defined by git.
+More details are present in the documentation of `git`.
+The default value is `refname:short`.
+
+>
+   let g:fzf_checkout_sort = 'refname'
+<
+
 vim:tw=78:ts=8:ft=help:norl:
