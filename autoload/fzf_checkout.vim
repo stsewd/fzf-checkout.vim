@@ -1,6 +1,6 @@
 " See valid atoms in
 " https://github.com/git/git/blob/076cbdcd739aeb33c1be87b73aebae5e43d7bcc5/ref-filter.c#L474
-let s:sort = get(g:,"fzf_checkout_sort","refname:short")
+let s:sort = get(g:,'fzf_checkout_sort','refname:short')
 let s:format = shellescape(
       \ '%(color:yellow bold)%(refname:short)  ' .
       \ '%(color:reset)%(color:green)%(subject) ' .
