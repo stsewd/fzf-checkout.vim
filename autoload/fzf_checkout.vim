@@ -1,5 +1,6 @@
 " See valid atoms in
 " https://github.com/git/git/blob/076cbdcd739aeb33c1be87b73aebae5e43d7bcc5/ref-filter.c#L474
+let s:sort = get(g:,"fzf_checkout_sort","refname:short")
 let s:format = shellescape(
       \ '%(color:yellow bold)%(refname:short)  ' .
       \ '%(color:reset)%(color:green)%(subject) ' .
@@ -198,9 +199,10 @@ function! fzf_checkout#list(bang, type, options, deprecated) abort
     let l:prompt = l:actions[l:action]['prompt']
   endif
 
-  let l:git_cmd = printf('%s %s --color=always --sort=refname:short --format=%s %s',
+  let l:git_cmd = printf('%s %s --color=always --sort=%s --format=%s %s',
         \ g:fzf_checkout_git_bin,
         \ l:subcommand,
+        \ s:sort,
         \ s:format,
         \ g:fzf_checkout_git_options
         \)
