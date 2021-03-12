@@ -69,7 +69,7 @@ Use the bang command to checkout a tag:
 
 ```vim
 let g:fzf_tag_actions = {
-      \ 'checkout': {'execute': '!{git} -C {wd} checkout {branch}'},
+      \ 'checkout': {'execute': '!{git} -C {cwd} checkout {branch}'},
       \}
 ```
 
@@ -96,7 +96,7 @@ let g:fzf_checkout_merge_settings = v:false
 let g:fzf_branch_actions = {
       \ 'checkout': {
       \   'prompt': 'Checkout> ',
-      \   'execute': 'echo system("{git} -C {wd} checkout {branch}")',
+      \   'execute': 'echo system("{git} -C {cwd} checkout {branch}")',
       \   'multiple': v:false,
       \   'keymap': 'enter',
       \   'required': ['branch'],
