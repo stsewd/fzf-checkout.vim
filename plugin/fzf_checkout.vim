@@ -7,7 +7,7 @@ let g:fzf_checkout_merge_settings = get(g:, 'fzf_checkout_merge_settings', v:tru
 let s:branch_actions = {
       \ 'checkout': {
       \   'prompt': 'Checkout> ',
-      \   'execute': 'echo system("{git} checkout {branch}")',
+      \   'execute': 'echo system("{git} checkout -b {branchlo} --track {branch} || {git} checkout {branch}")',
       \   'multiple': v:false,
       \   'keymap': 'enter',
       \   'required': ['branch'],

@@ -66,6 +66,7 @@ function! fzf_checkout#execute(type, action, lines) abort
       let l:branch = trim(shellescape(split(a:lines[2])[0]), l:trimchars)
     endif
   endif
+  let l:branchlo = trim(l:branch,"origin/")
 
   let l:required = l:actions[l:action]['required']
 
@@ -95,6 +96,7 @@ function! fzf_checkout#execute(type, action, lines) abort
   if type(l:Execute_command) == v:t_string
     let l:Execute_command = substitute(l:Execute_command, '{git}', g:fzf_checkout_git_bin, 'g')
     let l:Execute_command = substitute(l:Execute_command, '{branch}', l:branch, 'g')
+    let l:Execute_command = substitute(l:Execute_command, '{branchlo}', l:branchlo, 'g')
     let l:Execute_command = substitute(l:Execute_command, '{tag}', l:branch, 'g')
     let l:Execute_command = substitute(l:Execute_command, '{input}', l:input, 'g')
     execute l:Execute_command
