@@ -94,7 +94,7 @@ function! fzf_checkout#execute(type, action, lines) abort
   let l:Execute_command = l:actions[l:action]['execute']
   if type(l:Execute_command) == v:t_string
     let l:Execute_command = substitute(l:Execute_command, '{git}', g:fzf_checkout_git_bin, 'g')
-    let l:Execute_command = substitute(l:Execute_command, '{wd}', fzf_checkout#get_cwd(), 'g')
+    let l:Execute_command = substitute(l:Execute_command, '{cwd}', fzf_checkout#get_cwd(), 'g')
     let l:Execute_command = substitute(l:Execute_command, '{branch}', l:branch, 'g')
     let l:Execute_command = substitute(l:Execute_command, '{tag}', l:branch, 'g')
     let l:Execute_command = substitute(l:Execute_command, '{input}', l:input, 'g')
@@ -307,4 +307,3 @@ function! fzf_checkout#get_cwd() abort
   endif
   return shellescape(l:cwd)
 endfunction
-
