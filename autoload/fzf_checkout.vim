@@ -94,7 +94,7 @@ function! fzf_checkout#execute(type, action, lines) abort
   let l:Execute_command = l:actions[l:action]['execute']
   if type(l:Execute_command) == v:t_string
     let l:Execute_command = substitute(l:Execute_command, '{git}', g:fzf_checkout_git_bin, 'g')
-    let l:Execute_command = substitute(l:Execute_command, '{wd}', fzf_checkout#get_wd(), 'g')
+    let l:Execute_command = substitute(l:Execute_command, '{wd}', fzf_checkout#get_cwd(), 'g')
     let l:Execute_command = substitute(l:Execute_command, '{branch}', l:branch, 'g')
     let l:Execute_command = substitute(l:Execute_command, '{tag}', l:branch, 'g')
     let l:Execute_command = substitute(l:Execute_command, '{input}', l:input, 'g')
@@ -113,12 +113,12 @@ endfunction
 
 function! fzf_checkout#get_current_ref() abort
   " Try to get the branch name or fallback to get the commit.
-  let l:git_wd = fzf_checkout#get_wd()
+  let l:git_cwd = fzf_checkout#get_cwd()
   let l:git_cmd = printf('%s %s symbolic-ref --short -q HEAD || %s %s rev-parse --short HEAD',
         \ g:fzf_checkout_git_bin,
-        \ l:git_wd,
+        \ l:git_cwd,
         \ g:fzf_checkout_git_bin,
-        \ l:git_wd
+        \ l:git_cwd
         \)
   let l:current = system(l:git_cmd)
   let l:current = substitute(l:current, '\n', '', 'g')
@@ -128,16 +128,16 @@ endfunction
 
 function! fzf_checkout#get_previous_ref() abort
   " Try to get the branch name or fallback to get the commit.
-  let l:git_wd = fzf_checkout#get_wd()
+  let l:git_cwd = fzf_checkout#get_cwd()
   let l:git_cmd = printf('%s %s rev-parse -q --abbrev-ref --symbolic-full-name "@{-1}"',
         \ g:fzf_checkout_git_bin,
-        \ l:git_wd,
+        \ l:git_cwd,
         \)
   let l:previous = system(l:git_cmd)
   if v:shell_error != 0 || l:previous =~# '^\s*$'
     let l:git_cmd = printf('%s %s rev-parse --short -q "@{-1}"',
         \ g:fzf_checkout_git_bin,
-        \ l:git_wd,
+        \ l:git_cwd,
         \)
     let l:previous = system(l:git_cmd)
   endif
@@ -217,7 +217,7 @@ function! fzf_checkout#list(bang, type, options, deprecated) abort
 
   let l:git_cmd = printf('%s %s %s --color=always --sort=refname:short --format=%s %s',
         \ g:fzf_checkout_git_bin,
-        \ fzf_checkout#get_wd(),
+        \ fzf_checkout#get_cwd(),
         \ l:subcommand,
         \ s:format,
         \ g:fzf_checkout_git_options
@@ -299,7 +299,7 @@ function! fzf_checkout#complete_branches(arglead, cmdline, cursorpos) abort
   return join(l:options, "\n")
 endfunction
 
-function! fzf_checkout#get_wd() abort
+function! fzf_checkout#get_cwd() abort
   if get(g:, 'fzf_checkout_enable_submodules', v:false)
     return '-C '.shellescape(expand('%:p:h'))
   else
