@@ -300,7 +300,7 @@ function! fzf_checkout#complete_branches(arglead, cmdline, cursorpos) abort
 endfunction
 
 function! fzf_checkout#get_cwd() abort
-  if get(g:, 'fzf_checkout_enable_submodules', v:false)
+  if get(g:, 'fzf_checkout_use_current_buf_cwd', v:false)
     return '-C '.shellescape(expand('%:p:h'))
   else
     return ''
