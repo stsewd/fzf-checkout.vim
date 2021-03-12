@@ -219,6 +219,6 @@ Useful when working in a multi-git-repository project (with submodules for examp
 This option is disable by default.
 
 >
-    let g:fzf_checkout_use_current_buf_cwd = v:true
+    let g:fzf_checkout_use_current_buf_cwd = v:false
 <
 vim:tw=78:ts=8:ft=help:norl:
