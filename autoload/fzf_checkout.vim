@@ -66,7 +66,7 @@ function! fzf_checkout#execute(type, action, lines) abort
       let l:branch = trim(shellescape(split(a:lines[2])[0]), l:trimchars)
     endif
   endif
-  let l:branchlo = trim(l:branch,"origin/")
+  let l:branchlo = substitute(l:branch, '^origin/', '', 'g')
 
   let l:required = l:actions[l:action]['required']
 
