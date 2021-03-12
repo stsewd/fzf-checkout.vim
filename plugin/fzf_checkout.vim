@@ -7,7 +7,7 @@ let g:fzf_checkout_merge_settings = get(g:, 'fzf_checkout_merge_settings', v:tru
 let s:branch_actions = {
       \ 'checkout': {
       \   'prompt': 'Checkout> ',
-      \   'execute': 'echo system("{git} -C {wd} checkout {branch}")',
+      \   'execute': 'echo system("{git} -C {cwd} checkout {branch}")',
       \   'multiple': v:false,
       \   'keymap': 'enter',
       \   'required': ['branch'],
@@ -15,7 +15,7 @@ let s:branch_actions = {
       \ },
       \ 'track': {
       \   'prompt': 'Track> ',
-      \   'execute': 'echo system("{git} -C {wd} checkout --track {branch}")',
+      \   'execute': 'echo system("{git} -C {cwd} checkout --track {branch}")',
       \   'multiple': v:false,
       \   'keymap': 'alt-enter',
       \   'required': ['branch'],
@@ -23,7 +23,7 @@ let s:branch_actions = {
       \ },
       \ 'create': {
       \   'prompt': 'Create> ',
-      \   'execute': 'echo system("{git} -C {wd} checkout -b {input}")',
+      \   'execute': 'echo system("{git} -C {cwd} checkout -b {input}")',
       \   'multiple': v:false,
       \   'keymap': 'ctrl-b',
       \   'required': ['input'],
@@ -31,7 +31,7 @@ let s:branch_actions = {
       \ },
       \ 'delete': {
       \   'prompt': 'Delete> ',
-      \   'execute': 'echo system("{git} -C {wd} branch -D {branch}")',
+      \   'execute': 'echo system("{git} -C {cwd} branch -D {branch}")',
       \   'multiple': v:true,
       \   'keymap': 'ctrl-d',
       \   'required': ['branch'],
@@ -39,7 +39,7 @@ let s:branch_actions = {
       \ },
       \ 'merge':{
       \   'prompt': 'Merge> ',
-      \   'execute': 'echo system("{git} -C {wd} merge {branch}")',
+      \   'execute': 'echo system("{git} -C {cwd} merge {branch}")',
       \   'multiple': v:false,
       \   'keymap': 'ctrl-e',
       \   'required': ['branch'],
@@ -47,7 +47,7 @@ let s:branch_actions = {
       \ },
       \ 'rebase':{
       \   'prompt': 'Rebase> ',
-      \   'execute': 'echo system("{git} -C {wd} rebase {branch}")',
+      \   'execute': 'echo system("{git} -C {cwd} rebase {branch}")',
       \   'multiple': v:false,
       \   'keymap': 'ctrl-r',
       \   'required': ['branch'],
@@ -58,7 +58,7 @@ let s:branch_actions = {
 let s:tag_actions = {
       \ 'checkout': {
       \   'prompt': 'Checkout> ',
-      \   'execute': 'echo system("{git} -C {wd} checkout {tag}")',
+      \   'execute': 'echo system("{git} -C {cwd} checkout {tag}")',
       \   'multiple': v:false,
       \   'keymap': 'enter',
       \   'required': ['tag'],
@@ -66,7 +66,7 @@ let s:tag_actions = {
       \ },
       \ 'create': {
       \   'prompt': 'Create> ',
-      \   'execute': 'echo system("{git} -C {wd} tag {input}")',
+      \   'execute': 'echo system("{git} -C {cwd} tag {input}")',
       \   'multiple': v:false,
       \   'keymap': 'ctrl-b',
       \   'required': ['input'],
@@ -74,7 +74,7 @@ let s:tag_actions = {
       \ },
       \ 'delete': {
       \   'prompt': 'Delete> ',
-      \   'execute': 'echo system("{git} -C {wd} tag -d {tag}")',
+      \   'execute': 'echo system("{git} -C {cwd} tag -d {tag}")',
       \   'multiple': v:true,
       \   'keymap': 'ctrl-d',
       \   'required': ['tag'],
