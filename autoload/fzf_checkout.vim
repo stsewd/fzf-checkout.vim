@@ -114,7 +114,7 @@ endfunction
 function! fzf_checkout#get_current_ref() abort
   " Try to get the branch name or fallback to get the commit.
   let l:git_cwd = fzf_checkout#get_cwd()
-  let l:git_cmd = printf('%s %s symbolic-ref --short -q HEAD || %s %s rev-parse --short HEAD',
+  let l:git_cmd = printf('%s -C %s symbolic-ref --short -q HEAD || %s -C %s rev-parse --short HEAD',
         \ g:fzf_checkout_git_bin,
         \ l:git_cwd,
         \ g:fzf_checkout_git_bin,
@@ -129,13 +129,13 @@ endfunction
 function! fzf_checkout#get_previous_ref() abort
   " Try to get the branch name or fallback to get the commit.
   let l:git_cwd = fzf_checkout#get_cwd()
-  let l:git_cmd = printf('%s %s rev-parse -q --abbrev-ref --symbolic-full-name "@{-1}"',
+  let l:git_cmd = printf('%s -C %s rev-parse -q --abbrev-ref --symbolic-full-name "@{-1}"',
         \ g:fzf_checkout_git_bin,
         \ l:git_cwd,
         \)
   let l:previous = system(l:git_cmd)
   if v:shell_error != 0 || l:previous =~# '^\s*$'
-    let l:git_cmd = printf('%s %s rev-parse --short -q "@{-1}"',
+    let l:git_cmd = printf('%s -C %s rev-parse --short -q "@{-1}"',
         \ g:fzf_checkout_git_bin,
         \ l:git_cwd,
         \)
@@ -215,7 +215,7 @@ function! fzf_checkout#list(bang, type, options, deprecated) abort
     let l:prompt = l:actions[l:action]['prompt']
   endif
 
-  let l:git_cmd = printf('%s %s %s --color=always --sort=refname:short --format=%s %s',
+  let l:git_cmd = printf('%s -C %s %s --color=always --sort=refname:short --format=%s %s',
         \ g:fzf_checkout_git_bin,
         \ fzf_checkout#get_cwd(),
         \ l:subcommand,
@@ -301,9 +301,10 @@ endfunction
 
 function! fzf_checkout#get_cwd() abort
   if get(g:, 'fzf_checkout_use_current_buf_cwd', v:false)
-    return '-C '.shellescape(expand('%:p:h'))
+    let l:cwd = expand('%:p:h')
   else
-    return ''
+    let l:cwd = getcwd()
   endif
+  return shellescape(l:cwd)
 endfunction
 

@@ -119,7 +119,7 @@ and the value is a dictionary with the following keys:
    let g:fzf_branch_actions = {
          \ 'checkout': {
          \   'prompt': 'Checkout> ',
-         \   'execute': 'echo system("{git} {wd} checkout {branch}")',
+         \   'execute': 'echo system("{git} -C {wd} checkout {branch}")',
          \   'multiple': v:false,
          \   'keymap': 'enter',
          \   'required': ['branch'],
@@ -127,7 +127,7 @@ and the value is a dictionary with the following keys:
          \ },
          \ 'track': {
          \   'prompt': 'Track> ',
-         \   'execute': 'echo system("{git} {wd} checkout --track {branch}")',
+         \   'execute': 'echo system("{git} -C {wd} checkout --track {branch}")',
          \   'multiple': v:false,
          \   'keymap': 'alt-enter',
          \   'required': ['branch'],
@@ -135,7 +135,7 @@ and the value is a dictionary with the following keys:
          \ },
          \ 'create': {
          \   'prompt': 'Create> ',
-         \   'execute': 'echo system("{git} {wd} checkout -b {input}")',
+         \   'execute': 'echo system("{git} -C {wd} checkout -b {input}")',
          \   'multiple': v:false,
          \   'keymap': 'ctrl-b',
          \   'required': ['input'],
@@ -143,7 +143,7 @@ and the value is a dictionary with the following keys:
          \ },
          \ 'delete': {
          \   'prompt': 'Delete> ',
-         \   'execute': 'echo system("{git} {wd} branch -D {branch}")',
+         \   'execute': 'echo system("{git} -C {wd} branch -D {branch}")',
          \   'multiple': v:true,
          \   'keymap': 'ctrl-d',
          \   'required': ['branch'],
@@ -151,7 +151,7 @@ and the value is a dictionary with the following keys:
          \ },
          \ 'merge':{
          \   'prompt': 'Merge> ',
-         \   'execute': 'echo system("{git} {wd} merge {branch}")',
+         \   'execute': 'echo system("{git} -C {wd} merge {branch}")',
          \   'multiple': v:false,
          \   'keymap': 'ctrl-e',
          \   'required': ['branch'],
@@ -159,7 +159,7 @@ and the value is a dictionary with the following keys:
          \ },
          \ 'rebase':{
          \   'prompt': 'Rebase> ',
-         \   'execute': 'echo system("{git} {wd} rebase {branch}")',
+         \   'execute': 'echo system("{git} -C {wd} rebase {branch}")',
          \   'multiple': v:false,
          \   'keymap': 'ctrl-r',
          \   'required': ['branch'],
@@ -177,7 +177,7 @@ Same as |g:fzf_branch_actions|, but used to define tag actions.
    let g:fzf_tag_actions = {
          \ 'checkout': {
          \   'prompt': 'Checkout> ',
-         \   'execute': 'echo system("{git} {wd} checkout {tag}")',
+         \   'execute': 'echo system("{git} -C {wd} checkout {tag}")',
          \   'multiple': v:false,
          \   'keymap': 'enter',
          \   'required': ['tag'],
@@ -185,7 +185,7 @@ Same as |g:fzf_branch_actions|, but used to define tag actions.
          \ },
          \ 'create': {
          \   'prompt': 'Create> ',
-         \   'execute': 'echo system("{git} {wd} tag {input}")',
+         \   'execute': 'echo system("{git} -C {wd} tag {input}")',
          \   'multiple': v:false,
          \   'keymap': 'ctrl-b',
          \   'required': ['input'],
@@ -193,7 +193,7 @@ Same as |g:fzf_branch_actions|, but used to define tag actions.
          \ },
          \ 'delete': {
          \   'prompt': 'Delete> ',
-         \   'execute': 'echo system("{git} {wd} branch -D {tag}")',
+         \   'execute': 'echo system("{git} -C {wd} branch -D {tag}")',
          \   'multiple': v:true,
          \   'keymap': 'ctrl-d',
          \   'required': ['tag'],
