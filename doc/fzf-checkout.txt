@@ -214,10 +214,8 @@ Set it to `v:false` if you want to have full control over the defined actions.
                                           *g:fzf_checkout_use_current_buf_cwd*
 g:fzf_checkout_use_current_buf_cwd~
 
-Set the |g:fzf_checkout_use_current_buf_cwd| variable to operate in the
-correct directory for the current buffer. This will execute the `git` commands
-in the folder containing the file displayed in the current buffer. This
-facilitate the work in a multi-git-repository project (with submodules,...).
+If true, set the `{cwd}` placeholder to the directory from the current buffer.
+Useful when working in a multi-git-repository project (with submodules for example).
 This option is disable by default.
 
 >
