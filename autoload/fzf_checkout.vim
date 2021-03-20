@@ -83,7 +83,7 @@ function! fzf_checkout#execute(type, action, lines) abort
 
   if l:actions[l:action]['confirm']
     let l:choice = confirm(
-          \'Do yo want to ' . l:action . ' ' . l:branch . '?',
+          \'Do you want to ' . l:action . ' ' . l:branch . '?',
           \ "&Yes\n&No", 2
           \)
     if l:choice != 1
