@@ -302,6 +302,20 @@ endfunction
 function! fzf_checkout#get_cwd() abort
   if g:fzf_checkout_use_current_buf_cwd
     let l:cwd = expand('%:p:h')
+
+    " If we are in a fugitive buffer, remove the .git directory.
+    if &filetype ==# 'fugitive'
+      let l:cwd = substitute(l:cwd, '\(.\+\)\.git$', '\1', 'g')
+    endif
+
+    " Extract the cwd from a terminal buffer.
+    " :h terminal-start
+    if &buftype ==# 'terminal'
+      let l:match = matchlist(l:cwd, '^term://\(.\+\)//')
+      if !empty(l:match)
+        let l:cwd = fnamemodify(l:match[1], ':p:h')
+      endif
+    endif
   else
     let l:cwd = getcwd()
   endif
