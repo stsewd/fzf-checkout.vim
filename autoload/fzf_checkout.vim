@@ -250,7 +250,7 @@ function! fzf_checkout#list(bang, type, options, deprecated) abort
   let l:valid_keys = join(l:keybindings, ',')
   let l:fzf_options = [
         \ '--prompt', l:prompt,
-        \ '--header', l:current,
+        \ '--header', l:current."\n".':: <A-cr> track remote, <C-b> create, <C-d> delete, <C-e> merge, <C-r> rebase',
         \ '--nth', '1',
         \ '--multi',
         \ '--expect', l:valid_keys,
