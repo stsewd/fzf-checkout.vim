@@ -7,6 +7,11 @@ Manage branches and tags with [fzf](https://github.com/junegunn/fzf).
 
 ![fzf-checkout](https://user-images.githubusercontent.com/4975310/105560618-4da5ae00-5ce2-11eb-9cf3-24c9729d4e80.gif)
 
+# Requirements
+
+- `fzf`, see <https://github.com/junegunn/fzf/blob/master/README-VIM.md#installation>
+- `git >=2.13.7`
+
 # Installation
 
 Install using [vim-plug](https://github.com/junegunn/vim-plug).
@@ -15,9 +20,6 @@ Put this in your `init.vim`.
 ```vim
 Plug 'stsewd/fzf-checkout.vim'
 ```
-
-**Note:** You need to have `fzf` installed in addition to use this plugin.
-See <https://github.com/junegunn/fzf/blob/master/README-VIM.md#installation>.
 
 ## Features
 
