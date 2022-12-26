@@ -1,12 +1,24 @@
+scriptencoding utf-8
+
 " See valid atoms in
 " https://github.com/git/git/blob/076cbdcd739aeb33c1be87b73aebae5e43d7bcc5/ref-filter.c#L474
-let s:format = shellescape(
+let s:git_inline_format = shellescape(
       \ '%(color:yellow bold)%(refname:short)  ' .
       \ '%(color:reset)%(color:green)%(subject) ' .
-      \ '%(color:reset)%(color:green dim italic)%(committerdate:relative) ' .
-      \ '%(color:reset)%(color:blue)-> %(objectname:short)'
+      \ '%(color:reset)%(color:blue dim)• ' .
+      \ '%(color:reset)%(color:blue dim italic)%(committerdate:relative) ' .
+      \ '%(color:reset)%(color:blue dim)-> ' .
+      \ '%(color:reset)%(color:blue dim)%(objectname:short)'
+      \)
+let s:git_preview_format = shellescape('%(color:yellow bold)%(refname:short)')
+let s:git_inline_preview_format = shellescape(
+      \ '%(color:yellow bold)%(refname:short)  ' .
+      \ '%(color:reset)%(color:green)%(subject) ' .
+      \ '%(color:reset)%(color:blue dim)• ' .
+      \ '%(color:reset)%(color:blue dim italic)%(committerdate:relative)'
       \)
 let s:color_regex = '\e\[[0-9;]\+m'
+let s:trimchars = " \r\t\n\"'"
 
 
 let s:branch_keybindings = {}
@@ -39,8 +51,7 @@ function! fzf_checkout#execute(type, action, lines) abort
     return
   endif
 
-  let l:trimchars = " \r\t\n\"'"
-  let l:input = trim(shellescape(a:lines[0]), l:trimchars)
+  let l:input = trim(shellescape(a:lines[0]), s:trimchars)
   let l:key = a:lines[1]
   let l:actions = s:actions[a:type]
   let l:action = a:action
@@ -58,12 +69,12 @@ function! fzf_checkout#execute(type, action, lines) abort
   if len(a:lines) > 2
     if l:actions[l:action]['multiple']
       let l:branch = join(
-            \ map(a:lines[2:], 'trim(shellescape(split(v:val)[0]), l:trimchars)'),
+            \ map(a:lines[2:], 'trim(shellescape(split(v:val)[0]), s:trimchars)'),
             \ ' '
             \)
       let l:branch = trim(l:branch)
     else
-      let l:branch = trim(shellescape(split(a:lines[2])[0]), l:trimchars)
+      let l:branch = trim(shellescape(split(a:lines[2])[0]), s:trimchars)
     endif
   endif
 
@@ -93,16 +104,27 @@ function! fzf_checkout#execute(type, action, lines) abort
 
   let l:Execute_command = l:actions[l:action]['execute']
   if type(l:Execute_command) == v:t_string
-    let l:Execute_command = substitute(l:Execute_command, '{git}', g:fzf_checkout_git_bin, 'g')
-    let l:Execute_command = substitute(l:Execute_command, '{cwd}', fzf_checkout#get_cwd(), 'g')
-    let l:Execute_command = substitute(l:Execute_command, '{branch}', l:branch, 'g')
-    let l:Execute_command = substitute(l:Execute_command, '{tag}', l:branch, 'g')
-    let l:Execute_command = substitute(l:Execute_command, '{input}', l:input, 'g')
+    let l:Execute_command = s:format(l:Execute_command, {
+          \ 'git': g:fzf_checkout_git_bin,
+          \ 'cwd': fzf_checkout#get_cwd(),
+          \ 'branch': l:branch,
+          \ 'tag': l:branch,
+          \ 'input': l:input
+          \})
     execute l:Execute_command
   elseif type(l:Execute_command) == v:t_func
     call l:Execute_command(g:fzf_checkout_git_bin, l:branch, l:input)
   endif
+endfunction
 
+
+" Format a string like "Hello {name}" using a dictionary like {"name": "Neovim"}.
+function! s:format(string, options) abort
+  let l:string = a:string
+  for [l:key, l:value] in  items(a:options)
+    let l:string = substitute(l:string, printf('{%s}', l:key), l:value, 'g')
+  endfor
+  return l:string
 endfunction
 
 
@@ -207,13 +229,27 @@ function! fzf_checkout#list(bang, type, options) abort
     let l:prompt = l:actions[l:action]['prompt']
   endif
 
+  let l:mode = g:fzf_checkout_view_mode
+  let l:format = s:git_inline_format
+  if l:mode ==# 'preview'
+    let l:format = s:git_preview_format
+  endif
+  if l:mode ==# 'inline+preview'
+    let l:format = s:git_inline_preview_format
+  endif
+  let l:git_cwd = fzf_checkout#get_cwd()
   let l:git_cmd = printf('%s -C %s %s --color=always --sort=refname:short --format=%s %s',
         \ g:fzf_checkout_git_bin,
-        \ fzf_checkout#get_cwd(),
+        \ l:git_cwd,
         \ l:subcommand,
-        \ s:format,
+        \ l:format,
         \ g:fzf_checkout_git_options
         \)
+
+  let l:preview_cmd = ''
+  if l:mode ==# 'preview' || l:mode ==# 'inline+preview'
+    let l:preview_cmd = s:format(g:fzf_checkout_preview_cmd, {'git': g:fzf_checkout_git_bin, 'cwd': l:git_cwd})
+  endif
 
   let l:git_output = system(l:git_cmd)
 
@@ -234,7 +270,8 @@ function! fzf_checkout#list(bang, type, options) abort
     let l:previous = fzf_checkout#get_previous_ref()
     if !empty(l:previous)
       if (s:remove_branch(l:git_output, escape(l:previous, '/')))
-        call insert(l:git_output, system(l:git_cmd . ' --list ' . l:previous), 0)
+        let l:previous = system(l:git_cmd . ' --list ' . l:previous)
+        call insert(l:git_output, trim(previous, s:trimchars), 0)
       endif
     endif
   endif
@@ -249,6 +286,7 @@ function! fzf_checkout#list(bang, type, options) abort
         \ '--ansi',
         \ '--print-query',
         \ '--no-sort',
+        \ '--preview', l:preview_cmd,
         \]
   call fzf#run(fzf#wrap(
         \ l:name,

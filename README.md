@@ -106,3 +106,22 @@ let g:fzf_branch_actions = {
       \ },
       \}
 ```
+
+List the branch/tag information in one line without preview:
+
+```vim
+let g:fzf_checkout_view_mode = 'inline'
+```
+
+Use `git diff` for preview instead of `git show`:
+
+```vim
+let g:fzf_checkout_preview_cmd = '{git} -C {cwd} diff --color=always {1} --'
+```
+
+Show the branch/tag name only:
+
+```vim
+let g:fzf_checkout_view_mode = 'inline'
+let g:fzf_checkout_git_options = "--format='%(color:yellow)%(refname:short)'"
+```
