@@ -108,41 +108,8 @@ else
 endif
 
 
-let s:deprecated_options = [
-      \ 'fzf_checkout_execute',
-      \ 'fzf_checkout_track_execute',
-      \ 'fzf_checkout_track_key',
-      \ 'fzf_checkout_create_execute',
-      \ 'fzf_checkout_create_tag_execute',
-      \ 'fzf_checkout_create_key',
-      \ 'fzf_checkout_delete_execute',
-      \ 'fzf_checkout_delete_tag_execute',
-      \ 'fzf_checkout_delete_key',
-      \]
-
-for s:option in s:deprecated_options
-  if has_key(g:, s:option)
-    echohl WarningMsg
-    echomsg printf(
-          \ 'The g:%s option was removed, ' .
-          \ 'please use g:fzf_branch_actions and g:fzf_tag_actions instead.',
-          \ s:option,
-          \)
-    echohl None
-  endif
-endfor
-
-
 let s:prefix = get(g:, 'fzf_command_prefix', '')
-
-" These commands are going to be removed soon!
-" Use GBranches and GTags.
-let s:branch_command = s:prefix . 'GCheckout'
-let s:tag_command = s:prefix . 'GCheckoutTag'
-execute 'command! -bang -nargs=0 ' . s:branch_command . ' call fzf_checkout#list(<bang>0, "branch", "", v:true)'
-execute 'command! -bang -nargs=0 ' . s:tag_command . ' call fzf_checkout#list(<bang>0, "tag", "", v:true)'
-
 let s:branch_command = s:prefix . 'GBranches'
 let s:tag_command = s:prefix . 'GTags'
-execute 'command! -bang -nargs=* -complete=custom,fzf_checkout#complete_branches ' . s:branch_command . ' call fzf_checkout#list(<bang>0, "branch", <q-args>, v:false)'
-execute 'command! -bang -nargs=? -complete=custom,fzf_checkout#complete_tags ' . s:tag_command . ' call fzf_checkout#list(<bang>0, "tag", <q-args>, v:false)'
+execute 'command! -bang -nargs=* -complete=custom,fzf_checkout#complete_branches ' . s:branch_command . ' call fzf_checkout#list(<bang>0, "branch", <q-args>)'
+execute 'command! -bang -nargs=? -complete=custom,fzf_checkout#complete_tags ' . s:tag_command . ' call fzf_checkout#list(<bang>0, "tag", <q-args>)'
