@@ -1,9 +1,11 @@
 " Global settings
 let g:fzf_checkout_git_bin = get(g:, 'fzf_checkout_git_bin', 'git')
 let g:fzf_checkout_git_options = get(g:, 'fzf_checkout_git_options', '')
+let g:fzf_checkout_preview_cmd = get(g:, 'fzf_checkout_preview_cmd', '{git} -C {cwd} show --color=always {1} --')
 let g:fzf_checkout_previous_ref_first = get(g:, 'fzf_checkout_previous_ref_first', v:true)
 let g:fzf_checkout_merge_settings = get(g:, 'fzf_checkout_merge_settings', v:true)
 let g:fzf_checkout_use_current_buf_cwd = get(g:, 'fzf_checkout_use_current_buf_cwd', v:false)
+let g:fzf_checkout_view_mode = get(g:, 'fzf_checkout_view_mode', 'inline+preview')  " inline, preview, inline+preview.
 
 let s:branch_actions = {
       \ 'checkout': {
