@@ -1,3 +1,5 @@
+scriptencoding utf-8
+
 " See valid atoms in
 " https://github.com/git/git/blob/076cbdcd739aeb33c1be87b73aebae5e43d7bcc5/ref-filter.c#L474
 let s:git_inline_format = shellescape(
@@ -103,11 +105,11 @@ function! fzf_checkout#execute(type, action, lines) abort
   let l:Execute_command = l:actions[l:action]['execute']
   if type(l:Execute_command) == v:t_string
     let l:Execute_command = s:format(l:Execute_command, {
-          \ "git": g:fzf_checkout_git_bin,
-          \ "cwd": fzf_checkout#get_cwd(),
-          \ "branch": l:branch,
-          \ "tag": l:branch,
-          \ "input": l:input
+          \ 'git': g:fzf_checkout_git_bin,
+          \ 'cwd': fzf_checkout#get_cwd(),
+          \ 'branch': l:branch,
+          \ 'tag': l:branch,
+          \ 'input': l:input
           \})
     execute l:Execute_command
   elseif type(l:Execute_command) == v:t_func
@@ -117,7 +119,7 @@ endfunction
 
 
 " Format a string like "Hello {name}" using a dictionary like {"name": "Neovim"}.
-function! s:format(string, options)
+function! s:format(string, options) abort
   let l:string = a:string
   for [l:key, l:value] in  items(a:options)
     let l:string = substitute(l:string, printf('{%s}', l:key), l:value, 'g')
@@ -246,7 +248,7 @@ function! fzf_checkout#list(bang, type, options) abort
 
   let l:preview_cmd = ''
   if l:mode ==# 'preview' || l:mode ==# 'inline+preview'
-    let l:preview_cmd = s:format(g:fzf_checkout_preview_cmd, {"git": g:fzf_checkout_git_bin, "cwd": l:git_cwd})
+    let l:preview_cmd = s:format(g:fzf_checkout_preview_cmd, {'git': g:fzf_checkout_git_bin, 'cwd': l:git_cwd})
   endif
 
   let l:git_output = system(l:git_cmd)
