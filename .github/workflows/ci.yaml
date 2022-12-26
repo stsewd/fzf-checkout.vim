@@ -7,11 +7,11 @@ jobs:
     name: Tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
       - name: Install Neovim
         run: |
           sudo apt-get update
-          sudo add-apt-repository universe
+          sudo apt install libfuse2
           wget https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage
           chmod u+x nvim.appimage
           sudo mv nvim.appimage /usr/bin/nvim
