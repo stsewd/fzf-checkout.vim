@@ -31,6 +31,7 @@ Plug 'stsewd/fzf-checkout.vim'
 - Press `ctrl-e` to merge a branch
 - Press `ctrl-r` to rebase a branch
 - Ask for confirmation for irreversible actions like delete
+- Asynchronously execution of commands (Neovim only)
 - Define your own actions
 
 # Usage
@@ -98,7 +99,7 @@ let g:fzf_checkout_merge_settings = v:false
 let g:fzf_branch_actions = {
       \ 'checkout': {
       \   'prompt': 'Checkout> ',
-      \   'execute': 'echo system("{git} -C {cwd} checkout {branch}")',
+      \   'execute': function('fzf_checkout#run', ['{git} -C {cwd} checkout {branch}']),
       \   'multiple': v:false,
       \   'keymap': 'enter',
       \   'required': ['branch'],

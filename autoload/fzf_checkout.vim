@@ -118,6 +118,55 @@ function! fzf_checkout#execute(type, action, lines) abort
 endfunction
 
 
+" Neovim job callback.
+function! s:on_event(job_id, data, event) dict abort
+  if a:event ==# 'stdout' || a:event ==# 'stderr'
+    call extend(self.out, a:data)
+  elseif a:event ==# 'exit'
+    let l:out = join(self.out, "\n")
+    if !empty(l:out)
+      let l:log_level = a:data == 0 ? luaeval('vim.log.levels.INFO') : luaeval('vim.log.levels.ERROR')
+      call nvim_notify(l:out, l:log_level, {'title': 'fzf-checkout'})
+    endif
+  endif
+endfunction
+
+
+" Execute a command asynchronously when using Neovim.
+"
+" cmd: command to execute, it can contain placeholders like:
+"   - {git}
+"   - {cwd}
+"   - {branch}
+"   - {tag}
+"   - {input}
+" git_bin: Git binary.
+" branch: selected Branch/tag.
+" input: User input.
+function! fzf_checkout#run(cmd, git_bin, branch, input) abort
+  let l:cmd = s:format(a:cmd, {
+        \ 'git': a:git_bin,
+        \ 'cwd': fzf_checkout#get_cwd(),
+        \ 'branch': a:branch,
+        \ 'tag': a:branch,
+        \ 'input': a:input,
+        \})
+  " Neovim only.
+  if has('nvim') && exists('*jobstart')
+    let l:options = {
+          \ 'on_stdout': function('s:on_event'),
+          \ 'on_stderr': function('s:on_event'),
+          \ 'on_exit': function('s:on_event'),
+          \ 'out': [],
+          \}
+    return jobstart(l:cmd, l:options)
+  else
+    echo system(l:cmd)
+    return -1
+  endif
+endfunction
+
+
 " Format a string like "Hello {name}" using a dictionary like {"name": "Neovim"}.
 function! s:format(string, options) abort
   let l:string = a:string
