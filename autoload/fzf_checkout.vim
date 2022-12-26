@@ -305,7 +305,7 @@ function! fzf_checkout#get_cwd() abort
 
     " If we are in a fugitive buffer, remove the .git directory.
     if &filetype ==# 'fugitive'
-      let l:cwd = substitute(l:cwd, '\(.\+\)\.git$', '\1', 'g')
+      let l:cwd = substitute(l:cwd, '^fugitive://\(.\+\)\.git$', '\1', 'g')
     endif
 
     " Extract the cwd from a terminal buffer.
