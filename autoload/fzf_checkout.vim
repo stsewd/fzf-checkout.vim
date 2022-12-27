@@ -229,13 +229,13 @@ endfunction
 
 function! s:short_keymap(keymap) abort
   if a:keymap =~# '^ctrl-'
-    return toupper(substitute(a:keymap, 'ctrl-', 'C-', ""))
+    return toupper(substitute(a:keymap, 'ctrl-', 'C-', ''))
   elseif a:keymap =~# '^alt-'
-    return toupper(substitute(a:keymap, 'alt-', 'A-', ""))
+    return toupper(substitute(a:keymap, 'alt-', 'A-', ''))
   elseif a:keymap =~# '^shift-'
-    return toupper(substitute(a:keymap, 'shift-', 'S-', ""))
+    return toupper(substitute(a:keymap, 'shift-', 'S-', ''))
   elseif a:keymap =~# '^ctrl-alt-'
-    return toupper(substitute(a:keymap, 'ctrl-alt-', 'C+A-', ""))
+    return toupper(substitute(a:keymap, 'ctrl-alt-', 'C+A-', ''))
   endif
   return a:keymap
 endfunction
