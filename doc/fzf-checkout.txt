@@ -131,7 +131,7 @@ and the value is a dictionary with the following keys:
    let g:fzf_branch_actions = {
          \ 'checkout': {
          \   'prompt': 'Checkout> ',
-         \   'execute': 'echo system("{git} -C {cwd} checkout {branch}")',
+         \   'execute': function('fzf_checkout#run', ['{git} -C {cwd} checkout {branch}']),
          \   'multiple': v:false,
          \   'keymap': 'enter',
          \   'required': ['branch'],
@@ -139,7 +139,7 @@ and the value is a dictionary with the following keys:
          \ },
          \ 'track': {
          \   'prompt': 'Track> ',
-         \   'execute': 'echo system("{git} -C {cwd} checkout --track {branch}")',
+         \   'execute': function('fzf_checkout#run', ['{git} -C {cwd} checkout --track {branch}']),
          \   'multiple': v:false,
          \   'keymap': 'alt-enter',
          \   'required': ['branch'],
@@ -147,7 +147,7 @@ and the value is a dictionary with the following keys:
          \ },
          \ 'create': {
          \   'prompt': 'Create> ',
-         \   'execute': 'echo system("{git} -C {cwd} checkout -b {input}")',
+         \   'execute': function('fzf_checkout#run', ['{git} -C {cwd} checkout -b {input}']),
          \   'multiple': v:false,
          \   'keymap': 'ctrl-b',
          \   'required': ['input'],
@@ -155,7 +155,7 @@ and the value is a dictionary with the following keys:
          \ },
          \ 'delete': {
          \   'prompt': 'Delete> ',
-         \   'execute': 'echo system("{git} -C {cwd} branch -D {branch}")',
+         \   'execute': function('fzf_checkout#run', ['{git} -C {cwd} branch -D {branch}']),
          \   'multiple': v:true,
          \   'keymap': 'ctrl-d',
          \   'required': ['branch'],
@@ -163,7 +163,7 @@ and the value is a dictionary with the following keys:
          \ },
          \ 'merge':{
          \   'prompt': 'Merge> ',
-         \   'execute': 'echo system("{git} -C {cwd} merge {branch}")',
+         \   'execute': function('fzf_checkout#run', ['{git} -C {cwd} merge {branch}']),
          \   'multiple': v:false,
          \   'keymap': 'ctrl-e',
          \   'required': ['branch'],
@@ -171,7 +171,7 @@ and the value is a dictionary with the following keys:
          \ },
          \ 'rebase':{
          \   'prompt': 'Rebase> ',
-         \   'execute': 'echo system("{git} -C {cwd} rebase {branch}")',
+         \   'execute': function('fzf_checkout#run', ['{git} -C {cwd} rebase {branch}']),
          \   'multiple': v:false,
          \   'keymap': 'ctrl-r',
          \   'required': ['branch'],
@@ -189,7 +189,7 @@ Same as |g:fzf_branch_actions|, but used to define tag actions.
    let g:fzf_tag_actions = {
          \ 'checkout': {
          \   'prompt': 'Checkout> ',
-         \   'execute': 'echo system("{git} -C {cwd} checkout {tag}")',
+         \   'execute': function('fzf_checkout#run', ['{git} -C {cwd} checkout {tag}']),
          \   'multiple': v:false,
          \   'keymap': 'enter',
          \   'required': ['tag'],
@@ -197,7 +197,7 @@ Same as |g:fzf_branch_actions|, but used to define tag actions.
          \ },
          \ 'create': {
          \   'prompt': 'Create> ',
-         \   'execute': 'echo system("{git} -C {cwd} tag {input}")',
+         \   'execute': function('fzf_checkout#run', ['{git} -C {cwd} tag {input}']),
          \   'multiple': v:false,
          \   'keymap': 'ctrl-b',
          \   'required': ['input'],
@@ -205,7 +205,7 @@ Same as |g:fzf_branch_actions|, but used to define tag actions.
          \ },
          \ 'delete': {
          \   'prompt': 'Delete> ',
-         \   'execute': 'echo system("{git} -C {cwd} branch -D {tag}")',
+         \   'execute': function('fzf_checkout#run', ['{git} -C {cwd} tag -d {tag}']),
          \   'multiple': v:true,
          \   'keymap': 'ctrl-d',
          \   'required': ['tag'],
@@ -248,5 +248,33 @@ You can make use of the following placeholders:
 >
    let g:fzf_checkout_preview_cmd = '{git} -C {cwd} show --color=always {1} --'
 >
+
+==============================================================================
+
+FUNCTIONS                                             *fzf-checkout-functions*
+
+                                                          *fzf_checkout#run()*
+fzf_checkout#run({command}, {...})
+
+When using Noevim, executes a command asynchronously and shows its result using
+|nvim_notify()|. When using Vim it executes the command using |execute()| and
+prints its result. The command can have the same placeholders documented at
+|g:fzf_branch_actions|.
+
+This function is mainly used in the `execute` key of the
+|g:fzf_branch_actions| and |g:fzf_tag_actions| settings as a partial function,
+for example:
+
+>
+   let g:fzf_branch_actions = {
+         \ 'checkout': {
+         \   'prompt': 'Checkout> ',
+         \   'execute': function('fzf_checkout#run', ['{git} -C {cwd} checkout {branch}']),
+         \   'multiple': v:false,
+         \   'keymap': 'enter',
+         \   'required': ['branch'],
+         \   'confirm': v:false,
+         \}}
+<
 
 vim:tw=78:ts=8:ft=help:norl:

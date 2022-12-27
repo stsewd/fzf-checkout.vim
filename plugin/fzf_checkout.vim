@@ -10,7 +10,7 @@ let g:fzf_checkout_view_mode = get(g:, 'fzf_checkout_view_mode', 'inline+preview
 let s:branch_actions = {
       \ 'checkout': {
       \   'prompt': 'Checkout> ',
-      \   'execute': 'echo system("{git} -C {cwd} checkout {branch}")',
+      \   'execute': function('fzf_checkout#run', ['{git} -C {cwd} checkout {branch}']),
       \   'multiple': v:false,
       \   'keymap': 'enter',
       \   'required': ['branch'],
@@ -18,7 +18,7 @@ let s:branch_actions = {
       \ },
       \ 'track': {
       \   'prompt': 'Track> ',
-      \   'execute': 'echo system("{git} -C {cwd} checkout --track {branch}")',
+      \   'execute': function('fzf_checkout#run', ['{git} -C {cwd} checkout --track {branch}']),
       \   'multiple': v:false,
       \   'keymap': 'alt-enter',
       \   'required': ['branch'],
@@ -26,7 +26,7 @@ let s:branch_actions = {
       \ },
       \ 'create': {
       \   'prompt': 'Create> ',
-      \   'execute': 'echo system("{git} -C {cwd} checkout -b {input}")',
+      \   'execute': function('fzf_checkout#run', ['{git} -C {cwd} checkout -b {input}']),
       \   'multiple': v:false,
       \   'keymap': 'ctrl-b',
       \   'required': ['input'],
@@ -34,7 +34,7 @@ let s:branch_actions = {
       \ },
       \ 'delete': {
       \   'prompt': 'Delete> ',
-      \   'execute': 'echo system("{git} -C {cwd} branch -D {branch}")',
+      \   'execute': function('fzf_checkout#run', ['{git} -C {cwd} branch -D {branch}']),
       \   'multiple': v:true,
       \   'keymap': 'ctrl-d',
       \   'required': ['branch'],
@@ -42,7 +42,7 @@ let s:branch_actions = {
       \ },
       \ 'merge':{
       \   'prompt': 'Merge> ',
-      \   'execute': 'echo system("{git} -C {cwd} merge {branch}")',
+      \   'execute': function('fzf_checkout#run', ['{git} -C {cwd} merge {branch}']),
       \   'multiple': v:false,
       \   'keymap': 'ctrl-e',
       \   'required': ['branch'],
@@ -50,7 +50,7 @@ let s:branch_actions = {
       \ },
       \ 'rebase':{
       \   'prompt': 'Rebase> ',
-      \   'execute': 'echo system("{git} -C {cwd} rebase {branch}")',
+      \   'execute': function('fzf_checkout#run', ['{git} -C {cwd} rebase {branch}']),
       \   'multiple': v:false,
       \   'keymap': 'ctrl-r',
       \   'required': ['branch'],
@@ -61,7 +61,7 @@ let s:branch_actions = {
 let s:tag_actions = {
       \ 'checkout': {
       \   'prompt': 'Checkout> ',
-      \   'execute': 'echo system("{git} -C {cwd} checkout {tag}")',
+      \   'execute': function('fzf_checkout#run', ['{git} -C {cwd} checkout {tag}']),
       \   'multiple': v:false,
       \   'keymap': 'enter',
       \   'required': ['tag'],
@@ -69,7 +69,7 @@ let s:tag_actions = {
       \ },
       \ 'create': {
       \   'prompt': 'Create> ',
-      \   'execute': 'echo system("{git} -C {cwd} tag {input}")',
+      \   'execute': function('fzf_checkout#run', ['{git} -C {cwd} tag {input}']),
       \   'multiple': v:false,
       \   'keymap': 'ctrl-b',
       \   'required': ['input'],
@@ -77,7 +77,7 @@ let s:tag_actions = {
       \ },
       \ 'delete': {
       \   'prompt': 'Delete> ',
-      \   'execute': 'echo system("{git} -C {cwd} tag -d {tag}")',
+      \   'execute': function('fzf_checkout#run', ['{git} -C {cwd} tag -d {tag}']),
       \   'multiple': v:true,
       \   'keymap': 'ctrl-d',
       \   'required': ['tag'],
