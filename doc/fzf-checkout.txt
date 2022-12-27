@@ -105,6 +105,14 @@ Values can be:
 >
    let g:fzf_checkout_view_mode = 'inline+preview'
 <
+                                                    *g:fzf_checkout_show_help*
+g:fzf_checkout_show_help~
+
+Show available keymaps.
+
+>
+   let g:fzf_checkout_show_help = v:true
+<
 
                                                         *g:fzf_branch_actions*
 g:fzf_branch_actions~

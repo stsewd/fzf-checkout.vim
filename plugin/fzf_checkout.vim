@@ -6,6 +6,7 @@ let g:fzf_checkout_previous_ref_first = get(g:, 'fzf_checkout_previous_ref_first
 let g:fzf_checkout_merge_settings = get(g:, 'fzf_checkout_merge_settings', v:true)
 let g:fzf_checkout_use_current_buf_cwd = get(g:, 'fzf_checkout_use_current_buf_cwd', v:false)
 let g:fzf_checkout_view_mode = get(g:, 'fzf_checkout_view_mode', 'inline+preview')  " inline, preview, inline+preview.
+let g:fzf_checkout_show_help = get(g:, 'fzf_checkout_show_help', v:true)
 
 let s:branch_actions = {
       \ 'checkout': {
