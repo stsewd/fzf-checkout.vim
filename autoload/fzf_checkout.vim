@@ -1,5 +1,7 @@
 scriptencoding utf-8
 
+let s:wide = 120
+
 " See valid atoms in
 " https://github.com/git/git/blob/076cbdcd739aeb33c1be87b73aebae5e43d7bcc5/ref-filter.c#L474
 let s:git_inline_format = shellescape(
@@ -291,12 +293,19 @@ function! fzf_checkout#list(bang, type, options) abort
     let l:prompt = l:actions[l:action]['prompt']
   endif
 
-  let l:mode = g:fzf_checkout_view_mode
-  let l:format = s:git_inline_format
-  if l:mode ==# 'preview'
-    let l:format = s:git_preview_format
+  let l:view_mode = g:fzf_checkout_view_mode
+  if l:view_mode ==# 'auto'
+    if &columns > s:wide
+      let l:view_mode = 'inline+preview'
+    else
+      let l:view_mode = 'inline'
+    endif
   endif
-  if l:mode ==# 'inline+preview'
+
+  let l:format = s:git_inline_format
+  if l:view_mode ==# 'preview'
+    let l:format = s:git_preview_format
+  elseif l:view_mode ==# 'inline+preview'
     let l:format = s:git_inline_preview_format
   endif
   let l:git_cwd = fzf_checkout#get_cwd()
@@ -309,7 +318,7 @@ function! fzf_checkout#list(bang, type, options) abort
         \)
 
   let l:preview_cmd = ''
-  if l:mode ==# 'preview' || l:mode ==# 'inline+preview'
+  if l:view_mode ==# 'preview' || l:view_mode ==# 'inline+preview'
     let l:preview_cmd = s:format(g:fzf_checkout_preview_cmd, {'git': g:fzf_checkout_git_bin, 'cwd': l:git_cwd})
   endif
 
