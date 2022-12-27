@@ -1,10 +1,14 @@
 name: CI
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - master
+  pull_request:
 
 jobs:
-  tests:
-    name: Tests
+  tests-nvim:
+    name: Test (neovim)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -19,3 +23,17 @@ jobs:
         run: make setup
       - name: Execute tests
         run: make test EXTRA_OPTIONS='--headless'
+
+  tests-vim:
+    name: Test (vim)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Vim
+        run: |
+          sudo apt-get update
+          sudo apt-get install vim
+      - name: Setup
+        run: make setup
+      - name: Execute tests
+        run: make test VIM_BIN=vim
