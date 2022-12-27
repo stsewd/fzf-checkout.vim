@@ -17,7 +17,7 @@ let s:git_inline_preview_format = shellescape(
       \ '%(color:reset)%(color:blue dim)• ' .
       \ '%(color:reset)%(color:blue dim italic)%(committerdate:relative)'
       \)
-let s:color_regex = '\e\[[0-9;]\+m'
+let s:color_regex = '\(\e\[[0-9;]\+m\)'
 let s:trimchars = " \r\t\n\"'"
 
 
@@ -219,12 +219,25 @@ endfunction
 
 function! s:remove_branch(branches, pattern) abort
   " Find first occurrence and remove it
-  let l:index = match(a:branches, '^' . s:color_regex . a:pattern)
+  let l:index = match(a:branches, '^' . s:color_regex . '\?' . a:pattern)
   if (l:index != -1)
     call remove(a:branches, l:index)
     return v:true
   endif
   return v:false
+endfunction
+
+function! s:short_keymap(keymap) abort
+  if a:keymap =~# '^ctrl-'
+    return toupper(substitute(a:keymap, 'ctrl-', 'C-', ''))
+  elseif a:keymap =~# '^alt-'
+    return toupper(substitute(a:keymap, 'alt-', 'A-', ''))
+  elseif a:keymap =~# '^shift-'
+    return toupper(substitute(a:keymap, 'shift-', 'S-', ''))
+  elseif a:keymap =~# '^ctrl-alt-'
+    return toupper(substitute(a:keymap, 'ctrl-alt-', 'C+A-', ''))
+  endif
+  return a:keymap
 endfunction
 
 
@@ -325,10 +338,24 @@ function! fzf_checkout#list(bang, type, options) abort
     endif
   endif
 
+  let l:help = []
+  if g:fzf_checkout_show_help && empty(l:action)
+    for [l:key_, l:action_] in items(s:keybindings[a:type])
+      if l:key_ !=# 'enter'
+        let l:help += [printf('%s=%s', s:short_keymap(l:key_), l:action_)]
+      endif
+    endfor
+  endif
+
+  let l:header = l:current
+  if !empty(l:help)
+    let l:header .= "\n:: " . join(l:help, ' ')
+  endif
+
   let l:valid_keys = join(l:keybindings, ',')
   let l:fzf_options = [
         \ '--prompt', l:prompt,
-        \ '--header', l:current,
+        \ '--header', l:header,
         \ '--nth', '1',
         \ '--multi',
         \ '--expect', l:valid_keys,
