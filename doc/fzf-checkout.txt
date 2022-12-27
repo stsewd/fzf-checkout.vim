@@ -101,9 +101,10 @@ Values can be:
 - `inline`: Show the tag/branch information in the list only.
 - `preview`: Show the tag/branch information in the preview window only.
 - `inline+preview`: Show the tag/branch information in the list and preview window.
+- `auto`: Use `inline` or `inline+preview` depending of the width of the window.
 
 >
-   let g:fzf_checkout_view_mode = 'inline+preview'
+   let g:fzf_checkout_view_mode = 'auto'
 <
                                                     *g:fzf_checkout_show_help*
 g:fzf_checkout_show_help~
