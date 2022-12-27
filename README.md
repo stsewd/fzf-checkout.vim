@@ -5,7 +5,7 @@
 
 Manage branches and tags with [fzf](https://github.com/junegunn/fzf).
 
-![fzf-checkout](https://user-images.githubusercontent.com/4975310/105560618-4da5ae00-5ce2-11eb-9cf3-24c9729d4e80.gif)
+https://user-images.githubusercontent.com/4975310/209593694-46901dd3-6d26-486f-aa66-12321b87145c.mov
 
 # Requirements
 
